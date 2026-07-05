@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corpay 2025 Annual Report — IBM AI on Z</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Corpay logo top-left -->
+  <div class="corpay-logo">Corpay<span class="corpay-logo__caret">^</span></div>
+
+  <!-- ============================================================
+       MOBILE TOP NAV
+       ============================================================ -->
+  <nav class="mobile-nav" aria-label="Mobile section navigation">
+    <a href="#obs-1">Fraud</a>
+    <a href="#obs-2">Credit</a>
+    <a href="#obs-3">Compliance</a>
+    <a href="#obs-4">AP</a>
+    <a href="#obs-5">Cyber</a>
+  </nav>
+
+  <!-- ============================================================
+       BACKGROUND — fixed world map + desk environment
+       ============================================================ -->
+  <div class="bg-layer" aria-hidden="true"></div><!-- /bg-layer -->
+
+  <!-- ============================================================
+       RIGHT SIDE NAV — numbered circles
+       ============================================================ -->
+  <nav class="side-nav" aria-label="Section navigation">
+    <span class="side-nav__label-top">· Overview</span>
+    <a href="#obs-1" class="side-nav__item active" data-section="obs-1">
+      <span class="side-nav__circle">1</span>
+      <span class="side-nav__text">Fraud</span>
+    </a>
+    <a href="#obs-2" class="side-nav__item" data-section="obs-2">
+      <span class="side-nav__circle">2</span>
+      <span class="side-nav__text">Credit</span>
+    </a>
+    <a href="#obs-3" class="side-nav__item" data-section="obs-3">
+      <span class="side-nav__circle">3</span>
+      <span class="side-nav__text">Compliance</span>
+    </a>
+    <a href="#obs-4" class="side-nav__item" data-section="obs-4">
+      <span class="side-nav__circle">4</span>
+      <span class="side-nav__text">AP</span>
+    </a>
+    <a href="#obs-5" class="side-nav__item" data-section="obs-5">
+      <span class="side-nav__circle">5</span>
+      <span class="side-nav__text">Cyber</span>
+    </a>
+    <p class="side-nav__note">Focus on<br>real-time<br>decisioning<span class="side-nav__note-arrow">↓</span></p>
+  </nav>
+
+  <!-- ============================================================
+       PAGE SHELL — holds the report card
+       ============================================================ -->
+  <div class="page-shell">
+    <div class="report-card">
+
+      <!-- ======================================================
+           HERO
+           ====================================================== -->
+      <section class="hero">
+        <p class="hero__eyebrow"><strong>Corpay</strong> 2025 Form 10-K</p>
+        <h1 class="hero__headline">We Read Your<br>Annual Report.</h1>
+        <p class="hero__subheading">We found five opportunities where AI on IBM Z can help Corpay reduce risk, improve decisioning, and strengthen payment operations.</p>
+        <p class="hero__body">Rather than bringing generic AI use cases, IBM reviewed Corpay's 2025 Annual Report and mapped five business priorities to practical AI opportunities on IBM Z. Each opportunity below begins with Corpay's own disclosure, followed by IBM's perspective on where real-time, trusted AI can create value.</p>
+        <button class="hero__cta" id="hero-cta">Begin Executive Briefing <span class="hero__cta-arrow">↓</span></button>
+        <p class="hero__source">Source: Corpay 2025 Form 10-K.</p>
+      </section>
+
+      <!-- ======================================================
+           OBSERVATIONS — accordion list
+           ====================================================== -->
+      <div class="observations">
+
+        <!-- OBSERVATION 1 — FRAUD -->
+        <div class="observation is-open" id="obs-1">
+          <div class="observation__header" role="button" tabindex="0" aria-expanded="true">
+            <div>
+              <div class="observation__meta">
+                <span class="observation__label">Observation 1</span>
+                <span class="observation__page">Page 18</span>
+              </div>
+              <h2 class="observation__title">Real-Time Fraud Prevention</h2>
+            </div>
+            <span class="observation__chevron">↓</span>
+          </div>
+          <div class="observation__body">
+            <div class="obs-two-col">
+              <div class="quote-block">
+                <blockquote class="quote-highlight">"We may incur substantial losses due to fraudulent use of our payment solutions."</blockquote>
+                <span class="quote-source">— Corpay 2025 Form 10-K</span>
+              </div>
+              <div class="ibm-insight-card">
+                <span class="ibm-insight-card__label">IBM Insight</span>
+                <p>Transactional AI on IBM Z can analyze 100% of payment transactions instantly, while the transaction is still in flight—helping catch and block fraud before a payment is authorized.</p>
+              </div>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why this matters</h3>
+              <p>Fraud is not just a back-office issue. In a payments business, every transaction represents a real-time decision point. If suspicious activity is identified only after authorization or settlement, Corpay may be left trying to recover funds after the damage has already occurred.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>IBM AI on Z opportunity</h3>
+              <p>Transactional AI on IBM Z can analyze 100% of payment transactions instantly, while the transaction is still in flight. This allows Corpay to score transactions for suspicious behavior before approval, helping catch and block fraud before a payment is authorized rather than attempting to recover funds afterward.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why AI on Z is different</h3>
+              <p>Because the AI runs where core transaction processing already occurs, Corpay can avoid moving sensitive transaction data off-platform for analysis. That means lower latency, reduced data movement, and real-time decisioning at enterprise scale.</p>
+              <ul class="outcome-list">
+                <li>Analyze every transaction, not just sampled activity</li>
+                <li>Detect suspicious patterns before payment approval</li>
+                <li>Reduce fraud losses and post-event recovery efforts</li>
+                <li>Preserve transaction speed and customer experience</li>
+                <li>Keep sensitive payment data on the platform</li>
+              </ul>
+            </div>
+            <button class="continue-link" data-next="obs-2">Continue Reading ↓</button>
+          </div>
+        </div>
+
+        <!-- OBSERVATION 2 — CREDIT -->
+        <div class="observation" id="obs-2">
+          <div class="observation__header" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="observation__meta">
+                <span class="observation__label">Observation 2</span>
+                <span class="observation__page">Page 27</span>
+              </div>
+              <h2 class="observation__title">Credit Risk and Bad Debt Mitigation</h2>
+            </div>
+            <span class="observation__chevron">↓</span>
+          </div>
+          <div class="observation__body">
+            <div class="obs-two-col">
+              <div class="quote-block">
+                <blockquote class="quote-highlight">"If we fail to adequately assess and monitor credit risks or fraud of or by our customers or third parties, we could experience an increase in credit loss."</blockquote>
+                <span class="quote-source">— Corpay 2025 Form 10-K</span>
+              </div>
+              <div class="ibm-insight-card">
+                <span class="ibm-insight-card__label">IBM Insight</span>
+                <p>AI embedded directly into the transactional pipeline can continuously monitor account behavior and identify deteriorating credit quality in near real time, triggering executable action immediately when a customer crosses a risk threshold.</p>
+              </div>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why this matters</h3>
+              <p>Credit exposure can change quickly. A customer that looked acceptable during onboarding may become higher risk based on behavior, transaction patterns, payment timing, or external events. Static or delayed credit reviews can leave the business exposed.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>IBM AI on Z opportunity</h3>
+              <p>AI embedded directly into the transactional pipeline can continuously monitor account behavior and identify deteriorating credit quality in near real time. When a customer crosses a risk threshold, Corpay could trigger executable action immediately, such as flagging the account, adjusting limits, requiring review, or increasing monitoring.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why AI on Z is different</h3>
+              <p>AI on IBM Z allows credit risk signals to be evaluated as transactions occur, instead of waiting for downstream analysis. This creates an opportunity to move from periodic risk assessment to continuous risk monitoring.</p>
+              <ul class="outcome-list">
+                <li>Monitor customer behavior continuously</li>
+                <li>Identify risk threshold breaches faster</li>
+                <li>Reduce exposure to credit losses</li>
+                <li>Support faster account-level intervention</li>
+                <li>Improve confidence in credit decisioning</li>
+              </ul>
+            </div>
+            <button class="continue-link" data-next="obs-3">Continue Reading ↓</button>
+          </div>
+        </div>
+
+        <!-- OBSERVATION 3 — COMPLIANCE -->
+        <div class="observation" id="obs-3">
+          <div class="observation__header" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="observation__meta">
+                <span class="observation__label">Observation 3</span>
+                <span class="observation__page">Page 35</span>
+              </div>
+              <h2 class="observation__title">Cross-Border Compliance and Sanctions Screening</h2>
+            </div>
+            <span class="observation__chevron">↓</span>
+          </div>
+          <div class="observation__body">
+            <div class="obs-two-col">
+              <div class="quote-block">
+                <blockquote class="quote-highlight">"Failure to comply with the FCPA, AML regulations, economic and trade sanctions regulations and similar laws and regulations applicable to our international activities, could subject us to penalties and other adverse consequences."</blockquote>
+                <span class="quote-source">— Corpay 2025 Form 10-K</span>
+              </div>
+              <div class="ibm-insight-card">
+                <span class="ibm-insight-card__label">IBM Insight</span>
+                <p>Corpay can use AI on IBM Z to support instant payee verification and sanctions screening for cross-border transactions across more than 200 jurisdictions—keeping compliance decisions where they matter most: before the payment moves.</p>
+              </div>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why this matters</h3>
+              <p>Corpay operates across a complex global payments environment. Cross-border transactions require rapid decisions across payee verification, AML monitoring, sanctions screening, jurisdictional rules, and regulatory expectations. Delays or gaps can create financial, operational, and reputational risk.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>IBM AI on Z opportunity</h3>
+              <p>Corpay can use AI on IBM Z to support instant payee verification and sanctions screening for cross-border transactions across more than 200 jurisdictions. Real-time compliance monitoring can help evaluate payments before they move, reducing the latency and data-transfer risks associated with sending sensitive payment information off-platform for AI analysis.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why AI on Z is different</h3>
+              <p>Compliance decisions are most valuable when they happen before the payment leaves the system. By keeping AI close to the transaction, Corpay can improve speed, security, and auditability while reducing unnecessary movement of sensitive financial data.</p>
+              <ul class="outcome-list">
+                <li>Screen cross-border payments in real time</li>
+                <li>Support AML, FCPA, and sanctions compliance workflows</li>
+                <li>Reduce latency from off-platform analysis</li>
+                <li>Minimize sensitive data movement</li>
+                <li>Help avoid regulatory penalties and adverse consequences</li>
+              </ul>
+            </div>
+            <button class="continue-link" data-next="obs-4">Continue Reading ↓</button>
+          </div>
+        </div>
+
+        <!-- OBSERVATION 4 — AP -->
+        <div class="observation" id="obs-4">
+          <div class="observation__header" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="observation__meta">
+                <span class="observation__label">Observation 4</span>
+                <span class="observation__page">Page 46</span>
+              </div>
+              <h2 class="observation__title">Enhancing AP Automation and Spend Management</h2>
+            </div>
+            <span class="observation__chevron">↓</span>
+          </div>
+          <div class="observation__body">
+            <div class="obs-two-col">
+              <div class="quote-block">
+                <blockquote class="quote-highlight">"AI technologies are being rapidly adopted across the payment and enterprise software industries."</blockquote>
+                <span class="quote-source">— Corpay 2025 Form 10-K</span>
+              </div>
+              <div class="ibm-insight-card">
+                <span class="ibm-insight-card__label">IBM Insight</span>
+                <p>AI on IBM Z can apply real-time anomaly detection to accounts payable and spend management workflows—flagging irregular invoices, out-of-policy spending, duplicate activity, and unusual vendors as transactions occur, not after the fact.</p>
+              </div>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why this matters</h3>
+              <p>Corpay identifies AI adoption as a competitive force in the payments and enterprise software market. This creates both a risk and an opportunity. Competitors may use AI to improve automation, reduce manual effort, identify spend anomalies, and create better customer experiences.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>IBM AI on Z opportunity</h3>
+              <p>AI on IBM Z can help Corpay apply real-time anomaly detection to accounts payable and spend management workflows. As invoices, payments, and employee spend events occur, AI can flag irregular invoices, out-of-policy spending, duplicate activity, unusual vendors, or abnormal transaction patterns.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why AI on Z is different</h3>
+              <p>Keeping AI close to the transaction allows Corpay to detect issues as they happen rather than after the fact. It also avoids unnecessary latency and security exposure from moving sensitive financial data to another platform for processing.</p>
+              <ul class="outcome-list">
+                <li>Identify irregular invoices in real time</li>
+                <li>Flag out-of-policy spending earlier</li>
+                <li>Reduce manual review burden</li>
+                <li>Improve AP automation and spend governance</li>
+                <li>Strengthen Corpay's competitive AI position</li>
+              </ul>
+            </div>
+            <button class="continue-link" data-next="obs-5">Continue Reading ↓</button>
+          </div>
+        </div>
+
+        <!-- OBSERVATION 5 — CYBER -->
+        <div class="observation" id="obs-5">
+          <div class="observation__header" role="button" tabindex="0" aria-expanded="false">
+            <div>
+              <div class="observation__meta">
+                <span class="observation__label">Observation 5</span>
+                <span class="observation__page">Page 58</span>
+              </div>
+              <h2 class="observation__title">Mitigating Cybersecurity and Data Movement Risks</h2>
+            </div>
+            <span class="observation__chevron">↓</span>
+          </div>
+          <div class="observation__body">
+            <div class="obs-two-col">
+              <div class="quote-block">
+                <blockquote class="quote-highlight">"We may not be able to adequately protect our systems or the data we collect from continually evolving cybersecurity and data-protection risks, which could subject us to liability and damage our reputation."</blockquote>
+                <span class="quote-source">— Corpay 2025 Form 10-K</span>
+              </div>
+              <div class="ibm-insight-card">
+                <span class="ibm-insight-card__label">IBM Insight</span>
+                <p>AI on IBM Z allows Corpay to generate insights where the data already resides—bringing AI to the data instead of moving highly sensitive financial data off-platform, reducing exposure while enabling real-time intelligence.</p>
+              </div>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why this matters</h3>
+              <p>AI can create value, but it can also create new risk if sensitive financial, customer, or transaction data must be copied, exported, or moved to external environments for analysis. Every data movement path can increase exposure, complexity, cost, and governance requirements.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>IBM AI on Z opportunity</h3>
+              <p>AI on IBM Z allows Corpay to generate insights where the data already resides. Instead of moving highly sensitive financial data off-platform for AI analysis, Corpay can bring AI to the data, reducing exposure while still enabling real-time intelligence.</p>
+            </div>
+            <div class="obs-body-section">
+              <h3>Why AI on Z is different</h3>
+              <p>The mainframe is already designed for secure, high-volume, mission-critical transaction processing. Running AI directly on IBM Z helps preserve that security posture while reducing data-transfer risk, latency, and operational complexity.</p>
+              <ul class="outcome-list">
+                <li>Reduce unnecessary movement of sensitive financial data</li>
+                <li>Preserve security around core transaction systems</li>
+                <li>Lower data-transfer risk and cost</li>
+                <li>Improve governance and auditability</li>
+                <li>Enable AI without weakening the security model</li>
+              </ul>
+            </div>
+            <button class="continue-link" data-next="closing">Continue Reading ↓</button>
+          </div>
+        </div>
+
+      </div><!-- /observations -->
+
+      <!-- ======================================================
+           CLOSING
+           ====================================================== -->
+      <div class="closing" id="closing">
+        <div class="closing__content">
+          <h2>From Disclosure to Decisioning</h2>
+          <p>All five opportunities share a common theme: the most valuable AI decision is the one made while the transaction is still in flight. IBM AI on Z helps bring intelligence directly to the systems where Corpay's most critical payment, risk, compliance, and security decisions already happen.</p>
+          <button class="closing__cta" id="closing-cta">
+            <span class="closing__cta-icon">→</span>
+            <span>Let's explore where AI on Z could create the greatest value for Corpay first.</span>
+          </button>
+        </div>
+        <!-- IBM Z mainframe line illustration -->
+        <div class="ibmz-illustration" aria-hidden="true">
+          <svg width="120" height="150" viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg">
+            <!-- Mainframe cabinet -->
+            <rect x="20" y="20" width="80" height="110" rx="4"
+                  fill="none" stroke="rgba(15,98,254,0.45)" stroke-width="1.5"/>
+            <!-- Inner panel -->
+            <rect x="28" y="30" width="64" height="70" rx="2"
+                  fill="none" stroke="rgba(15,98,254,0.30)" stroke-width="1"/>
+            <!-- Drive bays -->
+            <rect x="34" y="38" width="52" height="8" rx="1"
+                  fill="none" stroke="rgba(15,98,254,0.35)" stroke-width="0.8"/>
+            <rect x="34" y="50" width="52" height="8" rx="1"
+                  fill="none" stroke="rgba(15,98,254,0.35)" stroke-width="0.8"/>
+            <rect x="34" y="62" width="52" height="8" rx="1"
+                  fill="none" stroke="rgba(15,98,254,0.35)" stroke-width="0.8"/>
+            <rect x="34" y="74" width="52" height="8" rx="1"
+                  fill="none" stroke="rgba(15,98,254,0.35)" stroke-width="0.8"/>
+            <!-- Status lights -->
+            <circle cx="44" cy="97" r="2.5" fill="rgba(15,98,254,0.50)"/>
+            <circle cx="52" cy="97" r="2.5" fill="rgba(15,98,254,0.35)"/>
+            <circle cx="60" cy="97" r="2.5" fill="rgba(15,98,254,0.50)"/>
+            <!-- Base -->
+            <rect x="16" y="130" width="88" height="10" rx="2"
+                  fill="none" stroke="rgba(15,98,254,0.30)" stroke-width="1"/>
+            <!-- Z label -->
+            <text x="52" y="118" font-family="sans-serif" font-size="11" font-weight="700"
+                  fill="rgba(15,98,254,0.60)" letter-spacing="1">Z</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- ======================================================
+           FOOTER
+           ====================================================== -->
+      <footer class="report-footer">
+        <p>Prepared by IBM for Corpay.<br>Based on IBM's review of Corpay's 2025 Form 10-K.</p>
+        <p class="ibm-logo">IBM</p>
+      </footer>
+
+    </div><!-- /report-card -->
+  </div><!-- /page-shell -->
+
+  <script src="script.js"></script>
+</body>
+</html>

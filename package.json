@@ -1,0 +1,15 @@
+{
+  "name": "corpay-annual-report",
+  "version": "1.0.0",
+  "description": "Corpay 2025 Annual Report: Five AI Opportunities Identified by IBM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
