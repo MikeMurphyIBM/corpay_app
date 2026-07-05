@@ -15,7 +15,17 @@ app.get('/health', (req, res) => {
 // Serve all frontend assets from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Fallback to index.html for any unmatched route
+// Landing page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// Report page
+app.get('/report', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'report.html'));
+});
+
+// Fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
