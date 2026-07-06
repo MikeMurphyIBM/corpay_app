@@ -39,19 +39,23 @@
       justify-content: space-between;
     }
 
-    /* ── Credit card — tossed onto the Indian Ocean ──
-       The Indian Ocean sits roughly at 62% from left, 52% from top
-       on a 16:9 background image displayed cover. The card is
-       rotated ~10° counter-clockwise to look casually tossed.   */
-    .card-zone {
+    /* ── Card + caption group — centered on the Indian Ocean ── */
+    .card-group {
       position: absolute;
-      /* Indian Ocean: between Africa (right edge ~48%) and Australia (left edge ~75%) */
       left: 58%;
       top: 48%;
-      transform: translate(-50%, -50%) rotate(-10deg);
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .card-zone {
+      display: block;
+      transform: rotate(-10deg);
       cursor: pointer;
       text-decoration: none;
-      /* Physical drop-shadow to suggest it's resting on the map */
       filter:
         drop-shadow(4px 8px 16px rgba(0,0,0,0.70))
         drop-shadow(1px 2px 4px rgba(0,0,0,0.50));
@@ -60,7 +64,7 @@
 
     .card-zone:hover,
     .card-zone:focus {
-      transform: translate(-50%, -50%) rotate(-10deg) scale(1.05);
+      transform: rotate(-10deg) scale(1.05);
       filter:
         drop-shadow(6px 12px 24px rgba(0,0,0,0.80))
         drop-shadow(2px 3px 6px rgba(0,0,0,0.55));
@@ -68,7 +72,7 @@
     }
 
     .card-zone:active {
-      transform: translate(-50%, -50%) rotate(-10deg) scale(0.97);
+      transform: rotate(-10deg) scale(0.97);
     }
 
     .card-img {
@@ -78,37 +82,26 @@
       border-radius: 10px;
     }
 
-    /* ── Bottom bar: headline left, logos right ── */
-    .bottom-bar {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 32px 22px;
-      background: linear-gradient(to top, rgba(5,12,25,0.82) 0%, rgba(5,12,25,0) 100%);
-      gap: 24px;
-    }
-
-    .bottom-headline {
+    /* ── Caption sits directly below the card ── */
+    .card-caption {
       font-family: 'IBM Plex Serif', Georgia, serif;
-      font-size: clamp(0.85rem, 1.6vw, 1.15rem);
+      font-size: clamp(0.80rem, 1.4vw, 1.05rem);
       font-weight: 400;
       color: #fff;
-      line-height: 1.45;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.60);
-      max-width: 480px;
+      text-align: center;
+      line-height: 1.5;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.70);
+      max-width: 340px;
+      background: rgba(5,12,25,0.45);
+      padding: 8px 14px;
+      border-radius: 6px;
     }
 
-    .bottom-headline em {
-      font-style: normal;
-      color: #ffe082;
-      font-weight: 600;
-    }
-
+    /* ── Logos pinned to bottom-right ── */
     .bottom-logos {
+      position: absolute;
+      bottom: 22px;
+      right: 32px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -149,21 +142,19 @@
         width: clamp(150px, 42vw, 220px);
       }
 
-      /* On narrow screens the Indian Ocean shifts left slightly */
-      .card-zone {
+      .card-group {
         left: 55%;
         top: 46%;
       }
 
-      .bottom-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 14px 20px 18px;
+      .card-caption {
+        font-size: 0.82rem;
+        max-width: 260px;
       }
 
-      .bottom-headline {
-        font-size: 0.88rem;
+      .bottom-logos {
+        bottom: 14px;
+        right: 18px;
       }
     }
   </style>
@@ -176,27 +167,26 @@
   <!-- Full-screen interactive layer -->
   <div class="shell">
 
-    <!-- Credit card in the Indian Ocean -->
-    <a class="card-zone"
-       href="/report"
-       aria-label="View IBM's analysis of Corpay's 2025 Annual Report">
-      <img
-        class="card-img"
-        src="/images/creditcard.png"
-        alt="Corpay Universal Fuel Card — tap to view analysis">
-    </a>
-
-    <!-- Bottom bar: headline + logos -->
-    <div class="bottom-bar">
-      <p class="bottom-headline">
-        IBM reviewed Corpay's 2025 Annual Report.<br>
-        <em>Tap the fuel card to see what we found.</em>
+    <!-- Card + caption grouped together over the Indian Ocean -->
+    <div class="card-group">
+      <a class="card-zone"
+         href="/report"
+         aria-label="View IBM's analysis of Corpay's 2025 Annual Report">
+        <img
+          class="card-img"
+          src="/images/creditcard.png"
+          alt="Corpay Universal Fuel Card — tap to view analysis">
+      </a>
+      <p class="card-caption">
+        IBM reviewed Corpay's 2025 Annual Report—Tap the Fuel Card to see what we found.
       </p>
-      <div class="bottom-logos">
-        <span class="logo-corpay">Corpay<span class="logo-corpay__caret">^</span></span>
-        <div class="logo-divider"></div>
-        <span class="logo-ibm">IBM</span>
-      </div>
+    </div>
+
+    <!-- Logos pinned bottom-right -->
+    <div class="bottom-logos">
+      <span class="logo-corpay">Corpay<span class="logo-corpay__caret">^</span></span>
+      <div class="logo-divider"></div>
+      <span class="logo-ibm">IBM</span>
     </div>
 
   </div>
