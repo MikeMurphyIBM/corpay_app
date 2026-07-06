@@ -7,20 +7,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
   <style>
-    /* ── LANDING PAGE STYLES ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .landing-body {
-      margin: 0;
-      padding: 0;
+    html, body {
       width: 100%;
-      min-height: 100vh;
-      overflow-x: hidden;
+      height: 100%;
+      overflow: hidden; /* landing is one fixed screen */
+      font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+      background-color: #0d1a2e;
     }
 
-    /* Full-viewport background */
-    .landing-bg {
+    /* ── Full-screen background ── */
+    .bg {
       position: fixed;
       inset: 0;
       background-image: url('/images/background.jpg');
@@ -30,206 +29,175 @@
       z-index: 0;
     }
 
-    /* Slight dark vignette so text pops */
-    .landing-bg::after {
-      content: '';
-      position: absolute;
+    /* ── Everything sits above the background ── */
+    .shell {
+      position: fixed;
       inset: 0;
-      background: rgba(5, 12, 25, 0.35);
-    }
-
-    /* Everything above the background */
-    .landing-shell {
-      position: relative;
       z-index: 1;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
     }
 
-    /* ── HEADER: Corpay + IBM logos ── */
-    .landing-header {
+    /* ── Credit card — tossed onto the Indian Ocean ──
+       The Indian Ocean sits roughly at 62% from left, 52% from top
+       on a 16:9 background image displayed cover. The card is
+       rotated ~10° counter-clockwise to look casually tossed.   */
+    .card-zone {
+      position: absolute;
+      /* Indian Ocean: between Africa (right edge ~48%) and Australia (left edge ~75%) */
+      left: 58%;
+      top: 48%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+      cursor: pointer;
+      text-decoration: none;
+      /* Physical drop-shadow to suggest it's resting on the map */
+      filter:
+        drop-shadow(4px 8px 16px rgba(0,0,0,0.70))
+        drop-shadow(1px 2px 4px rgba(0,0,0,0.50));
+      transition: transform 0.22s ease, filter 0.22s ease;
+    }
+
+    .card-zone:hover,
+    .card-zone:focus {
+      transform: translate(-50%, -50%) rotate(-10deg) scale(1.05);
+      filter:
+        drop-shadow(6px 12px 24px rgba(0,0,0,0.80))
+        drop-shadow(2px 3px 6px rgba(0,0,0,0.55));
+      outline: none;
+    }
+
+    .card-zone:active {
+      transform: translate(-50%, -50%) rotate(-10deg) scale(0.97);
+    }
+
+    .card-img {
+      display: block;
+      width: clamp(180px, 22vw, 320px);
+      height: auto;
+      border-radius: 10px;
+    }
+
+    /* ── Bottom bar: headline left, logos right ── */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 28px 32px 0;
+      justify-content: space-between;
+      padding: 18px 32px 22px;
+      background: linear-gradient(to top, rgba(5,12,25,0.82) 0%, rgba(5,12,25,0) 100%);
+      gap: 24px;
     }
 
-    .landing-corpay-logo {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.01em;
-      line-height: 1;
-    }
-
-    .landing-corpay-logo__caret {
-      color: #da1e28;
-    }
-
-    .landing-divider {
-      width: 1px;
-      height: 28px;
-      background: rgba(255,255,255,0.30);
-    }
-
-    .landing-ibm-logo {
-      font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: 0.12em;
-    }
-
-    /* ── HEADLINE ── */
-    .landing-headline-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 24px 0;
-      text-align: center;
-    }
-
-    .landing-headline {
+    .bottom-headline {
       font-family: 'IBM Plex Serif', Georgia, serif;
-      font-size: clamp(1.15rem, 3vw, 1.55rem);
+      font-size: clamp(0.85rem, 1.6vw, 1.15rem);
       font-weight: 400;
       color: #fff;
       line-height: 1.45;
-      max-width: 620px;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.55);
+      text-shadow: 0 1px 6px rgba(0,0,0,0.60);
+      max-width: 480px;
     }
 
-    .landing-headline em {
+    .bottom-headline em {
       font-style: normal;
       color: #ffe082;
       font-weight: 600;
     }
 
-    /* ── CREDIT CARD — tossed onto the map ── */
-    .landing-card-area {
-      flex: 1;
-      position: relative;
+    .bottom-logos {
       display: flex;
       align-items: center;
-      justify-content: center;
-      min-height: 340px;
+      gap: 16px;
+      flex-shrink: 0;
     }
 
-    .landing-card-link {
-      display: block;
-      /* Positioned in the Indian Ocean: centre-right of map, between Africa & Australia */
-      position: absolute;
-      top: 50%;
-      left: 58%;
-      transform: translate(-50%, -50%) rotate(8deg);
-      cursor: pointer;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-      text-decoration: none;
-      /* Realistic tossed-card shadow */
-      filter: drop-shadow(6px 12px 18px rgba(0,0,0,0.55))
-              drop-shadow(0 2px 4px rgba(0,0,0,0.35));
-    }
-
-    .landing-card-link:hover,
-    .landing-card-link:focus {
-      transform: translate(-50%, -50%) rotate(8deg) scale(1.04);
-      filter: drop-shadow(8px 16px 24px rgba(0,0,0,0.65))
-              drop-shadow(0 3px 6px rgba(0,0,0,0.40));
-      outline: none;
-    }
-
-    .landing-card-link:active {
-      transform: translate(-50%, -50%) rotate(8deg) scale(0.98);
-    }
-
-    .landing-card-img {
-      width: clamp(200px, 28vw, 340px);
-      height: auto;
-      display: block;
-      border-radius: 12px;
-    }
-
-    /* Subtle tap hint label below card on mobile */
-    .landing-tap-hint {
-      position: absolute;
-      top: calc(50% + clamp(110px, 16vw, 190px));
-      left: 58%;
-      transform: translateX(-50%) rotate(8deg);
+    .logo-corpay {
       font-family: 'IBM Plex Sans', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.55);
-      pointer-events: none;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .logo-corpay__caret { color: #da1e28; }
+
+    .logo-divider {
+      width: 1px;
+      height: 22px;
+      background: rgba(255,255,255,0.30);
+    }
+
+    .logo-ibm {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.12em;
       white-space: nowrap;
     }
 
-    /* ── FOOTER ── */
-    .landing-footer {
-      padding: 16px 32px 24px;
-      text-align: center;
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.30);
-      letter-spacing: 0.04em;
-    }
-
-    /* ── MOBILE adjustments ── */
+    /* ── Mobile ── */
     @media (max-width: 640px) {
-      .landing-bg {
-        background-attachment: scroll;
-        position: fixed; /* keep fixed so it shows on iOS too */
+      html, body { overflow: hidden; }
+
+      .card-img {
+        width: clamp(150px, 42vw, 220px);
       }
 
-      .landing-card-link {
-        /* On small screens centre it more */
-        left: 52%;
-        top: 52%;
+      /* On narrow screens the Indian Ocean shifts left slightly */
+      .card-zone {
+        left: 55%;
+        top: 46%;
       }
 
-      .landing-tap-hint {
-        left: 52%;
+      .bottom-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 20px 18px;
+      }
+
+      .bottom-headline {
+        font-size: 0.88rem;
       }
     }
   </style>
 </head>
-<body class="landing-body">
+<body>
 
-  <!-- Full-screen background -->
-  <div class="landing-bg"></div>
+  <!-- Background image -->
+  <div class="bg"></div>
 
-  <div class="landing-shell">
+  <!-- Full-screen interactive layer -->
+  <div class="shell">
 
-    <!-- Header: Corpay + IBM -->
-    <header class="landing-header">
-      <div class="landing-corpay-logo">Corpay<span class="landing-corpay-logo__caret">^</span></div>
-      <div class="landing-divider"></div>
-      <div class="landing-ibm-logo">IBM</div>
-    </header>
+    <!-- Credit card in the Indian Ocean -->
+    <a class="card-zone"
+       href="/report"
+       aria-label="View IBM's analysis of Corpay's 2025 Annual Report">
+      <img
+        class="card-img"
+        src="/images/creditcard.png"
+        alt="Corpay Universal Fuel Card — tap to view analysis">
+    </a>
 
-    <!-- Headline -->
-    <div class="landing-headline-wrap">
-      <p class="landing-headline">
+    <!-- Bottom bar: headline + logos -->
+    <div class="bottom-bar">
+      <p class="bottom-headline">
         IBM reviewed Corpay's 2025 Annual Report.<br>
         <em>Tap the fuel card to see what we found.</em>
       </p>
+      <div class="bottom-logos">
+        <span class="logo-corpay">Corpay<span class="logo-corpay__caret">^</span></span>
+        <div class="logo-divider"></div>
+        <span class="logo-ibm">IBM</span>
+      </div>
     </div>
-
-    <!-- Credit card tossed onto the Indian Ocean -->
-    <div class="landing-card-area">
-      <a href="/report" class="landing-card-link" aria-label="View the IBM analysis of Corpay's 2025 Annual Report">
-        <img src="/images/creditcard.png" alt="Corpay Universal Fuel Card" class="landing-card-img">
-      </a>
-      <span class="landing-tap-hint">Tap to open →</span>
-    </div>
-
-    <!-- Footer -->
-    <footer class="landing-footer">
-      Prepared by IBM for Corpay · Based on Corpay's 2025 Form 10-K
-    </footer>
 
   </div>
 

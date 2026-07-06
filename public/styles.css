@@ -15,21 +15,26 @@ html { scroll-behavior: smooth; font-size: 16px; }
    ============================================================ */
 body {
   font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
-  /* Background image on body works reliably on all devices including iOS Safari */
   background-color: #0d1a2e;
-  background-image: url('/images/background.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-attachment: scroll; /* scroll (not fixed) works on iOS Safari */
   color: #1a2535;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
-/* .bg-layer div is no longer needed — background lives on body */
-.bg-layer { display: none; }
+/* ============================================================
+   BACKGROUND FIXED LAYER
+   ============================================================ */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/images/background.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
 
 /* ============================================================
    PAGE SHELL — centers the report card
