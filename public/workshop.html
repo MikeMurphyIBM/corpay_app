@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI on IBM Z Discovery Workshop — IBM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #07111f;
+  color: #1a2535;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   DARK DESK BACKGROUND (same as report page)
+   ============================================================ */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/images/background.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.bg-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(15,98,254,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,98,254,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-layer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(15,98,254,0.12) 1px, transparent 1px);
+  background-size: 96px 96px;
+  background-position: 24px 24px;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 52px;
+  background: rgba(7,17,31,0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.corpay-logo {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  text-decoration: none;
+}
+
+.corpay-logo__caret { color: #da1e28; font-size: 1.1rem; line-height: 1; }
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 3px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.back-btn:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+.page-shell {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 80px 24px 60px;
+}
+
+/* ============================================================
+   DOCUMENT PANEL
+   ============================================================ */
+.doc-panel {
+  background: #f5f2eb;
+  width: 100%;
+  max-width: 780px;
+  border-radius: 3px;
+  box-shadow:
+    0 4px 40px rgba(0,0,0,0.5),
+    0 1px 4px rgba(0,0,0,0.3);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Subtle paper texture */
+.doc-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.018) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================================
+   WORKSHOP COVER (hero of the doc)
+   ============================================================ */
+.workshop-hero {
+  background: linear-gradient(150deg, #0a1f3d 0%, #0d2a4f 60%, #0f3060 100%);
+  padding: 52px 56px 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.workshop-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(15,98,254,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15,98,254,0.06) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.wh__ibm-bar {
+  width: 100%;
+  height: 3px;
+  background: #0f62fe;
+  margin-bottom: 32px;
+}
+
+.wh__eyebrow {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 16px;
+}
+
+.wh__title {
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.wh__subtitle {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.65;
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+
+.wh__contact {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.3);
+}
+
+.wh__contact a {
+  color: rgba(15,98,254,0.85);
+  text-decoration: none;
+}
+
+.wh__contact a:hover { text-decoration: underline; }
+
+/* ============================================================
+   DOCUMENT BODY
+   ============================================================ */
+.doc-body {
+  padding: 52px 56px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   SECTION STYLES
+   ============================================================ */
+.doc-section {
+  margin-bottom: 48px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.doc-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.doc-section__eyebrow {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #0f62fe;
+  margin-bottom: 10px;
+}
+
+.doc-section__title {
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a2535;
+  line-height: 1.25;
+  margin-bottom: 18px;
+}
+
+.doc-section__lead {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1a2535;
+  line-height: 1.65;
+  margin-bottom: 16px;
+}
+
+.doc-section__body {
+  font-size: 0.9rem;
+  color: #374151;
+  line-height: 1.8;
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   THREE-COLUMN INTRO CARDS
+   ============================================================ */
+.intro-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.intro-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-top: 3px solid #0f62fe;
+  padding: 20px 18px;
+}
+
+.intro-card__num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f62fe;
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.intro-card__title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1a2535;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.intro-card__body {
+  font-size: 0.8rem;
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   PERSONAS LIST
+   ============================================================ */
+.persona-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+}
+
+.persona-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-size: 0.88rem;
+  color: #374151;
+}
+
+.persona-list li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0f62fe;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   ROLE TABLE
+   ============================================================ */
+.role-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.86rem;
+}
+
+.role-table th {
+  text-align: left;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  padding: 8px 12px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.role-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  color: #374151;
+  line-height: 1.5;
+  vertical-align: top;
+}
+
+.role-table tr:last-child td { border-bottom: none; }
+
+.role-table td:first-child {
+  font-weight: 600;
+  color: #1a2535;
+  width: 40%;
+}
+
+/* ============================================================
+   NUMBERED STEPS
+   ============================================================ */
+.step-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 16px;
+  counter-reset: step-counter;
+}
+
+.step-list li {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  counter-increment: step-counter;
+  align-items: flex-start;
+}
+
+.step-list li::before {
+  content: counter(step-counter);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #0f62fe;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-list li p {
+  font-size: 0.88rem;
+  color: #374151;
+  line-height: 1.65;
+}
+
+.step-list li strong {
+  color: #1a2535;
+}
+
+/* ============================================================
+   APPROACH CARDS
+   ============================================================ */
+.approach-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.approach-card {
+  background: #f0f7ff;
+  border: 1px solid #c8d9f8;
+  border-left: 3px solid #0f62fe;
+  padding: 16px 18px;
+}
+
+.approach-card__label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #0f62fe;
+  margin-bottom: 6px;
+}
+
+.approach-card__body {
+  font-size: 0.86rem;
+  color: #374151;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   WORKSHOP ELEMENTS TABLE
+   ============================================================ */
+.elements-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.84rem;
+}
+
+.elements-table th {
+  text-align: left;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  padding: 8px 12px;
+  border-bottom: 2px solid #e5e7eb;
+  background: rgba(0,0,0,0.02);
+}
+
+.elements-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  color: #374151;
+  line-height: 1.55;
+  vertical-align: top;
+}
+
+.elements-table tr:last-child td { border-bottom: none; }
+
+.elements-table td:first-child {
+  font-weight: 600;
+  color: #1a2535;
+  width: 32%;
+}
+
+/* ============================================================
+   AGENDA TABLE
+   ============================================================ */
+.agenda-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.84rem;
+}
+
+.agenda-table th {
+  text-align: left;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b7280;
+  padding: 8px 12px;
+  border-bottom: 2px solid #e5e7eb;
+  background: rgba(0,0,0,0.02);
+}
+
+.agenda-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  color: #374151;
+  line-height: 1.5;
+}
+
+.agenda-table tr:last-child td { border-bottom: none; }
+
+.agenda-table td:first-child { font-weight: 500; color: #6b7280; width: 18%; }
+.agenda-table td:nth-child(2) { color: #1a2535; }
+.agenda-table td:nth-child(3) { color: #9ca3af; font-size: 0.78rem; width: 15%; }
+.agenda-table td:nth-child(4) { color: #9ca3af; font-size: 0.78rem; width: 12%; }
+
+/* ============================================================
+   PREP CHECKLIST
+   ============================================================ */
+.prep-section {
+  margin-bottom: 24px;
+}
+
+.prep-section__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1a2535;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.prep-list {
+  list-style: none;
+  padding: 0;
+}
+
+.prep-list li {
+  font-size: 0.86rem;
+  color: #374151;
+  padding: 6px 0 6px 18px;
+  position: relative;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+  line-height: 1.55;
+}
+
+.prep-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #0f62fe;
+  font-weight: 700;
+}
+
+/* ============================================================
+   FOLLOW-UP SECTION
+   ============================================================ */
+.followup-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.followup-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  padding: 18px;
+}
+
+.followup-card__num {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(15,98,254,0.2);
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.followup-card__body {
+  font-size: 0.84rem;
+  color: #374151;
+  line-height: 1.65;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.doc-footer {
+  background: #1a2535;
+  padding: 28px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.doc-footer p {
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+}
+
+.doc-footer a {
+  color: rgba(15,98,254,0.8);
+  text-decoration: none;
+}
+
+.doc-footer a:hover { text-decoration: underline; }
+
+.doc-footer__ibm {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.5);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 640px) {
+  .page-shell { padding: 68px 12px 40px; }
+  .workshop-hero { padding: 36px 24px 32px; }
+  .doc-body { padding: 36px 24px; }
+  .doc-footer { padding: 24px; }
+  .intro-cards { grid-template-columns: 1fr; }
+  .followup-grid { grid-template-columns: 1fr; }
+  .role-table, .elements-table, .agenda-table { font-size: 0.78rem; }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Background desk layer -->
+  <div class="bg-layer" aria-hidden="true"></div>
+
+  <!-- Top bar -->
+  <header class="top-bar">
+    <a class="corpay-logo" href="/">Corpay<span class="corpay-logo__caret">^</span></a>
+    <a class="back-btn" href="/report">‹ Back to Report</a>
+  </header>
+
+  <!-- Page shell -->
+  <main class="page-shell">
+    <div class="doc-panel">
+
+      <!-- ============================================================
+           HERO
+           ============================================================ -->
+      <div class="workshop-hero">
+        <div class="wh__ibm-bar"></div>
+        <p class="wh__eyebrow">2026 · Free of Charge · 1–2 Days</p>
+        <h1 class="wh__title">AI on IBM Z &amp;<br>LinuxONE<br>Discovery Workshop</h1>
+        <p class="wh__subtitle">By applying AI decisioning directly within your high-volume, transactional workloads and applications already running your business, this free-of-charge, 1–2 day workshop will identify and demonstrate high-value that matters to your business: revenue growth, operating margin, customer experience, risk reduction, and more.</p>
+        <p class="wh__contact">Contact us at <a href="mailto:aionz@us.ibm.com">aionz@us.ibm.com</a> &nbsp;·&nbsp; © 2026 IBM Corporation</p>
+      </div>
+
+      <!-- ============================================================
+           DOCUMENT BODY
+           ============================================================ -->
+      <div class="doc-body">
+
+        <!-- Section 1: Making Transaction Processing Smarter -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Overview</p>
+          <h2 class="doc-section__title">Making Transaction Processing Smarter and More Valuable</h2>
+          <p class="doc-section__lead">Working with IBM experts, selected opportunities are rapidly validated without disrupting operations through a focused Proof of Concept, demonstrating measurable improvements in decision velocity, consistency, and business outcomes on your core transactional systems, IBM Z and LinuxONE™.</p>
+
+          <div class="intro-cards">
+            <div class="intro-card">
+              <div class="intro-card__num">01</div>
+              <p class="intro-card__title">Identify &amp; Assess Business Value</p>
+              <p class="intro-card__body">Pinpoint high-impact AI opportunities within your high throughput transaction flows to drive growth, reduce risk, and unlock deeper operational and market insights from your core systems.</p>
+            </div>
+            <div class="intro-card">
+              <div class="intro-card__num">02</div>
+              <p class="intro-card__title">Observe Transactional AI in Action</p>
+              <p class="intro-card__body">Witness how AI infusion transforms routine business decisions into valuable insights that unlock competitive differentiation and untapped business potential.</p>
+            </div>
+            <div class="intro-card">
+              <div class="intro-card__num">03</div>
+              <p class="intro-card__title">Design Your Proof of Concept</p>
+              <p class="intro-card__body">Co-create your Transactional AI proof of concept with IBM and your key leaders to move beyond ideas, proving value early and creating momentum toward confidently deploying intelligence into everyday business execution.</p>
+            </div>
+          </div>
+
+          <p class="doc-section__body" style="margin-top:8px;"><strong>Required client personas for the workshop:</strong> Line of Business / Business Analyst · Chief Data Officer · AI Leader / Data Scientist · Application Architect · Infrastructure Architect</p>
+        </section>
+
+        <!-- Section 2: Who Should Attend -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Participants</p>
+          <h2 class="doc-section__title">Who Should Attend and Why</h2>
+          <p class="doc-section__lead">Bringing together business, tech, and data leaders to shape what's possible.</p>
+          <p class="doc-section__body">To get the most out of this session, we recommend a small, focused team representing business, application owners, data, and infrastructure. Each role brings critical input to assess value and feasibility.</p>
+
+          <table class="role-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Key Contribution</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Executive Sponsor (e.g., Head of Business Unit, COO)</td><td>Sets vision, priorities, and business alignment</td></tr>
+              <tr><td>Business Owner</td><td>Defines pain points, goals, and success factors</td></tr>
+              <tr><td>Business Analyst</td><td>Walks through business flows, decisions, and business metrics</td></tr>
+              <tr><td>Application Owner</td><td>Explains how decisions are implemented today</td></tr>
+              <tr><td>Data Owner</td><td>Shares data availability, structure, and labeling knowledge</td></tr>
+              <tr><td>Infra / Platform Owner</td><td>Describes systems architecture and deployment context</td></tr>
+              <tr><td>AI Lead or Data Scientist</td><td>Advises on modeling, scoring, and AI readiness</td></tr>
+            </tbody>
+          </table>
+
+          <p class="doc-section__body" style="margin-top:16px;font-style:italic;color:#6b7280;">We generally recommend that the executive sponsor open the workshop and rejoin for the final readout. They do not need to participate throughout unless they choose to.</p>
+        </section>
+
+        <!-- Section 3: What to Expect -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Workshop Agenda</p>
+          <h2 class="doc-section__title">What to Expect from This Workshop</h2>
+          <p class="doc-section__lead">A focused, collaborative session to identify where AI on IBM Z &amp; LinuxONE delivers the greatest impact.</p>
+          <p class="doc-section__body">This is a business-informed, technically-grounded workshop that pinpoints where AI — deployed on IBM Z &amp; LinuxONE — can enhance decisions and outcomes across your enterprise.</p>
+
+          <p class="doc-section__body" style="margin-bottom:4px;"><strong>We will guide you through:</strong></p>
+          <ol class="step-list">
+            <li><p><strong>Selecting 2–3 high-impact use cases</strong> — where AI-driven decisions can meaningfully improve performance or reduce risk.</p></li>
+            <li><p><strong>Mapping the decisions</strong> — that most influence cost, effort, and outcomes.</p></li>
+            <li><p><strong>Assessing feasibility</strong> — across decision logic and data readiness, including proximity to systems and AI deployment options.</p></li>
+            <li><p><strong>Exploring enabling technology patterns</strong> — how models can be integrated directly on IBM Z &amp; LinuxONE, leveraging on-chip AI acceleration with Telum and the newly announced Spyre cards for real-time insight at scale.</p></li>
+            <li><p><strong>Quantifying potential business value</strong> — using metrics such as volume, latency, exposure, and uplift.</p></li>
+            <li><p><strong>Defining next steps</strong> — toward a targeted AI pilot that demonstrates both business and platform outcomes.</p></li>
+          </ol>
+        </section>
+
+        <!-- Section 4: Selecting the Right Approach -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Approach</p>
+          <h2 class="doc-section__title">Selecting the Right Approach Depending on Where You Are Today</h2>
+          <p class="doc-section__body">We tailor the approach to your situation, select the most suitable methods, and collaborate with you to identify and implement the most impactful use case for your business.</p>
+
+          <div class="approach-cards">
+            <div class="approach-card">
+              <p class="approach-card__label">If you have no use case idea</p>
+              <p class="approach-card__body">We drive Enterprise Design Thinking methods to identify, prioritize, and explore a feasible use case that is intended to deliver meaningful business value.</p>
+            </div>
+            <div class="approach-card">
+              <p class="approach-card__label">If you already have identified a use case idea or AI insertion points</p>
+              <p class="approach-card__body">We drive use case deep-dive exploration and offer a Business Impact Assessment.</p>
+            </div>
+            <div class="approach-card">
+              <p class="approach-card__label">If you have a business use case idea but would like to explore more</p>
+              <p class="approach-card__body">A hybrid approach works best — combining design thinking discovery with targeted deep-dive exploration.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Workshop Elements -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Workshop Elements</p>
+          <h2 class="doc-section__title">Elements in a Workshop Agenda</h2>
+          <p class="doc-section__body">Choose from a selection of workshop topics to create the ideal workshop for your team.</p>
+
+          <table class="elements-table">
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>AI Fundamentals</td>
+                <td>Overview of the modern AI landscape, capabilities, and trends shaping today's intelligent systems. Defines commonly used AI terminology to build a shared foundational understanding for all participants. (~45 mins)</td>
+              </tr>
+              <tr>
+                <td>AI on IBM Z Strategy and Technology Overview</td>
+                <td>Comprehensive insights into AI on IBM Z, covering architectural aspects of the AI ecosystem — including integration with open-source technologies and highlighting common industry use case patterns. (~60–90 mins)</td>
+              </tr>
+              <tr>
+                <td>Technology Patterns and Entry Points</td>
+                <td>Common implementation patterns and reference architectures. (~30 mins)</td>
+              </tr>
+              <tr>
+                <td>Use Case Exploration &amp; Business Value Assessment</td>
+                <td>Explore key business use cases (decision points) and identify key value drivers with quantifiable impact of AI infusion and ROI. Could include Enterprise Design Thinking (EDT) to create and prioritize a list of possible use cases. (~1–3 hrs)</td>
+              </tr>
+              <tr>
+                <td>Use Case Deep Dive</td>
+                <td>Comprehensive review of the current processing workflow to identify inefficiencies and key areas for AI infusion. Align technical solutions with business priorities to maximize ROI. (~1–4 hrs)</td>
+              </tr>
+              <tr>
+                <td>Visualize Use Case with AI Infusion</td>
+                <td>Co-create the to-be process leveraging AI capabilities, including possible reference architecture. (~15–30 mins)</td>
+              </tr>
+              <tr>
+                <td>Technology Overview(s)</td>
+                <td>For clients that already have a product and want to use it; or at the direct request of a client to explain a product they have heard of. (~30–60 mins)</td>
+              </tr>
+              <tr>
+                <td>Technology Demo(s)</td>
+                <td>Great as a follow-on to "Visualize Use Case with AI Infusion" and/or "Technology Overview." (~15–30 mins)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Section 6: Sample Agenda -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Sample Schedule</p>
+          <h2 class="doc-section__title">Sample 1-Day Workshop Agenda</h2>
+          <p class="doc-section__body">A structured, customizable working session — uncovering and prioritizing high-impact AI opportunities. The agenda is intended as a guide and can be adjusted based on your team's focus areas and input.</p>
+
+          <table class="agenda-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Topic</th>
+                <th>Duration</th>
+                <th>Led By</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>09:00–09:20</td><td>Welcome &amp; Introductions</td><td>20 mins</td><td>All</td></tr>
+              <tr><td>09:20–10:05</td><td>Client Overview including AI Ambitions</td><td>45 mins</td><td>Client</td></tr>
+              <tr><td>10:05–10:45</td><td>AI Fundamentals 101 (Optional)</td><td>40 mins</td><td>IBM</td></tr>
+              <tr><td>10:45–11:00</td><td>Break</td><td>15 mins</td><td>All</td></tr>
+              <tr><td>11:00–12:00</td><td>AI on IBM Z &amp; LinuxONE Strategic and Technology Overview</td><td>60 mins</td><td>IBM</td></tr>
+              <tr><td>12:00–13:00</td><td>Lunch</td><td>60 mins</td><td>All</td></tr>
+              <tr><td>13:00–14:00</td><td>Use Case Exploration &amp; Business Value Assessment</td><td>60 mins</td><td>All</td></tr>
+              <tr><td>14:00–14:15</td><td>Break</td><td>15 mins</td><td>All</td></tr>
+              <tr><td>14:15–15:15</td><td>Use Case Deep-Dive</td><td>60 mins</td><td>All</td></tr>
+              <tr><td>15:15–15:45</td><td>Visualize Use Case with AI Infusion</td><td>30 mins</td><td>IBM</td></tr>
+              <tr><td>15:45–16:00</td><td>Wrap-Up &amp; Next Steps</td><td>30 mins</td><td>IBM</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- Section 7: How to Prepare (with a use case) -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Preparation</p>
+          <h2 class="doc-section__title">How to Prepare and What to Bring</h2>
+          <p class="doc-section__lead">This is a working session — please come prepared with real use cases related to real decisions and real data.</p>
+
+          <div class="prep-section">
+            <p class="prep-section__title">If you have use case ideas already in mind, prepare the following for each:</p>
+            <ul class="prep-list">
+              <li><strong>Process Flow Overview</strong> — A simple diagram or slide with clearly marked decision points.</li>
+              <li><strong>Decision-Level Metrics</strong> — Transaction volume, associated revenue or cost, % manual review, error/fraud/exception rates, cycle times, rework, or satisfaction KPIs.</li>
+              <li><strong>Known Pain Points</strong> — Bottlenecks, delays, inconsistent decisions, or sources of risk.</li>
+              <li><strong>AI Ambition</strong> — Clear goals (e.g., reduce manual effort, improve accuracy, catch fraud earlier).</li>
+              <li><strong>Data Readiness</strong> — Historical data availability and location, whether outcomes are labeled (e.g., approve/reject, fraud/clean), any quality gaps or concerns.</li>
+            </ul>
+          </div>
+
+          <div class="prep-section">
+            <p class="prep-section__title">If you don't have a use case in mind, think about the following:</p>
+            <ul class="prep-list">
+              <li><strong>How are decisions made today?</strong> — Where are business rules used to make decisions? What are the areas where a faster, automated decision would bring business value?</li>
+              <li><strong>New opportunities</strong> — What new opportunities exist in your workloads? (e.g., loss prevention, improved customer experience, fraud detection, reduced manual effort)</li>
+              <li><strong>Existing AI implementation</strong> — Is AI being used off platform leveraging IBM Z data? Is any z/OS app sending in-transaction scoring requests off platform? What AI use cases have you implemented, and what is the relevance of IBM Z data in these?</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Section 8: After the Workshop -->
+        <section class="doc-section">
+          <p class="doc-section__eyebrow">Follow-Up</p>
+          <h2 class="doc-section__title">Client Discovery Workshop Follow-Up</h2>
+          <p class="doc-section__lead">Helping our customers get to production.</p>
+          <p class="doc-section__body">After the workshop, IBM will deliver a detailed report on everything that happened — incorporating details of the current environment, the "as-is" of the selected use case, how running the workload on Z will benefit the business, and tangible business value with specific metrics.</p>
+          <p class="doc-section__body">This provides support for the client to secure executive buy-in and approval for resources for the Proof of Concept.</p>
+
+          <div class="followup-grid">
+            <div class="followup-card">
+              <div class="followup-card__num">01</div>
+              <p class="followup-card__body">Schedule playback of the workshop report to ensure accuracy and suggest next steps, including sponsorship for a PoC.</p>
+            </div>
+            <div class="followup-card">
+              <div class="followup-card__num">02</div>
+              <p class="followup-card__body">Schedule subsequent meetings to start scoping the Proof of Concept, leveraging IBM Client Engineering and/or WW System Center teams.</p>
+            </div>
+            <div class="followup-card">
+              <div class="followup-card__num">03</div>
+              <p class="followup-card__body">Assist in every step of the way — collaborating with the client until the PoC is completed.</p>
+            </div>
+            <div class="followup-card">
+              <div class="followup-card__num">04</div>
+              <p class="followup-card__body">IBM provides end-to-end support from initial discovery through production deployment, with your dedicated Horizon Select team.</p>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /doc-body -->
+
+      <!-- Footer -->
+      <footer class="doc-footer">
+        <p>Prepared for Corpay by IBM · Based on the 2026 AI on IBM Z &amp; LinuxONE Discovery Workshop overview<br>
+        Contact: <a href="mailto:aionz@us.ibm.com">aionz@us.ibm.com</a> · Mike Murphy &amp; Christian Toulet</p>
+        <span class="doc-footer__ibm">IBM</span>
+      </footer>
+
+    </div><!-- /doc-panel -->
+  </main>
+
+</body>
+</html>

@@ -25,6 +25,11 @@ app.get('/report', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'report.html'));
 });
 
+// Workshop page
+app.get('/workshop', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'workshop.html'));
+});
+
 // Fallback
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
