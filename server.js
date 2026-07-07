@@ -8,8 +8,9 @@ const crypto = require('crypto');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Trust the Code Engine ingress load balancer so X-Forwarded-For is honoured
-app.set('trust proxy', true);
+// Trust the Code Engine ingress load balancer so X-Forwarded-For is honoured.
+// '1' means trust exactly one upstream proxy (the Code Engine ingress).
+app.set('trust proxy', 1);
 
 // ── Cookie parser (no external dep — parse manually) ─────────────────────────
 function parseCookies(cookieHeader) {
@@ -47,15 +48,6 @@ app.use((req, res, next) => {
 // can parse and index every field, including visitor_id for Count Distinct.
 app.use((req, res, next) => {
   const startMs = Date.now();
-
-  // Debug: log all incoming headers once so we can see what Code Engine passes
-  if (req.path !== '/health') {
-    process.stdout.write(JSON.stringify({
-      debug: true,
-      path: req.path,
-      headers: req.headers,
-    }) + '\n');
-  }
 
   res.on('finish', () => {
     // Skip health-check noise in logs
