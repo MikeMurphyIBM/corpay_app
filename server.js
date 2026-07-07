@@ -49,6 +49,17 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const startMs = Date.now();
 
+  // TEMP DEBUG: dump all raw headers so we can see exact names and values
+  if (req.path !== '/health') {
+    process.stdout.write(JSON.stringify({
+      debug_headers: true,
+      path: req.path,
+      raw_headers: req.headers,
+      socket_ip: req.socket.remoteAddress,
+      req_ip: req.ip,
+    }) + '\n');
+  }
+
   res.on('finish', () => {
     // Skip health-check noise in logs
     if (req.path === '/health') return;
