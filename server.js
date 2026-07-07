@@ -48,6 +48,15 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const startMs = Date.now();
 
+  // Debug: log all incoming headers once so we can see what Code Engine passes
+  if (req.path !== '/health') {
+    process.stdout.write(JSON.stringify({
+      debug: true,
+      path: req.path,
+      headers: req.headers,
+    }) + '\n');
+  }
+
   res.on('finish', () => {
     // Skip health-check noise in logs
     if (req.path === '/health') return;
