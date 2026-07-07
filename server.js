@@ -8,6 +8,9 @@ const crypto = require('crypto');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Trust the Code Engine ingress load balancer so X-Forwarded-For is honoured
+app.set('trust proxy', true);
+
 // ── Cookie parser (no external dep — parse manually) ─────────────────────────
 function parseCookies(cookieHeader) {
   const cookies = {};
@@ -58,9 +61,7 @@ app.use((req, res, next) => {
       status: res.statusCode,
       duration_ms: elapsedMs,
       duration_seconds: parseFloat((elapsedMs / 1000).toFixed(3)),
-      client_ip: req.headers['x-forwarded-for']
-                   ? req.headers['x-forwarded-for'].split(',')[0].trim()
-                   : req.socket.remoteAddress,
+      client_ip: req.ip,
       referrer: req.headers['referer'] || null,
       user_agent: req.headers['user-agent'] || null,
     };
