@@ -49,22 +49,18 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   const startMs = Date.now();
 
-  // TEMP DEBUG: dump all raw headers so we can see exact names and values
-  if (req.path !== '/health') {
-    process.stdout.write(JSON.stringify({
-      debug_headers: true,
-      path: req.path,
-      raw_headers: req.headers,
-      socket_ip: req.socket.remoteAddress,
-      req_ip: req.ip,
-    }) + '\n');
-  }
-
   res.on('finish', () => {
     // Skip health-check noise in logs
     if (req.path === '/health') return;
 
     const elapsedMs = Date.now() - startMs;
+    // x-envoy-external-address is the cleanest single external IP in Code Engine
+    // x-forwarded-for is the fallback (first entry), then socket IP as last resort
+    const clientIp =
+      req.headers['x-envoy-external-address'] ||
+      (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+      req.socket.remoteAddress;
+
     const log = {
       timestamp: new Date().toISOString(),
       visitor_id: req.visitorId,
@@ -73,7 +69,7 @@ app.use((req, res, next) => {
       status: res.statusCode,
       duration_ms: elapsedMs,
       duration_seconds: parseFloat((elapsedMs / 1000).toFixed(3)),
-      client_ip: req.ip,
+      client_ip: clientIp,
       referrer: req.headers['referer'] || null,
       user_agent: req.headers['user-agent'] || null,
     };
