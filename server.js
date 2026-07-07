@@ -3,11 +3,73 @@
 
 const express = require('express');
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Health check — required by IBM Cloud Code Engine
+// ── Cookie parser (no external dep — parse manually) ─────────────────────────
+function parseCookies(cookieHeader) {
+  const cookies = {};
+  if (!cookieHeader) return cookies;
+  cookieHeader.split(';').forEach(pair => {
+    const [key, ...rest] = pair.trim().split('=');
+    if (key) cookies[key.trim()] = decodeURIComponent(rest.join('=').trim());
+  });
+  return cookies;
+}
+
+// ── Visitor-ID middleware ─────────────────────────────────────────────────────
+// Assigns a persistent visitor_id cookie on first visit (180-day TTL).
+// The same ID is reused on subsequent requests from the same browser.
+app.use((req, res, next) => {
+  const cookies = parseCookies(req.headers.cookie);
+  let visitorId = cookies['vid'];
+
+  if (!visitorId) {
+    visitorId = crypto.randomUUID();
+    // HttpOnly keeps JS from reading it; SameSite=Lax is safe for navigations
+    res.setHeader(
+      'Set-Cookie',
+      `vid=${visitorId}; Max-Age=${60 * 60 * 24 * 180}; Path=/; HttpOnly; SameSite=Lax`
+    );
+  }
+
+  req.visitorId = visitorId;
+  next();
+});
+
+// ── JSON request logger ───────────────────────────────────────────────────────
+// Emits one structured JSON line per request to stdout so IBM Cloud Logs
+// can parse and index every field, including visitor_id for Count Distinct.
+app.use((req, res, next) => {
+  const startMs = Date.now();
+
+  res.on('finish', () => {
+    // Skip health-check noise in logs
+    if (req.path === '/health') return;
+
+    const log = {
+      timestamp: new Date().toISOString(),
+      visitor_id: req.visitorId,
+      method: req.method,
+      path: req.path,
+      status: res.statusCode,
+      duration_ms: Date.now() - startMs,
+      referrer: req.headers['referer'] || null,
+      user_agent: req.headers['user-agent'] || null,
+      ip: req.headers['x-forwarded-for']
+            ? req.headers['x-forwarded-for'].split(',')[0].trim()
+            : req.socket.remoteAddress,
+    };
+
+    process.stdout.write(JSON.stringify(log) + '\n');
+  });
+
+  next();
+});
+
+// ── Health check — required by IBM Cloud Code Engine ─────────────────────────
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
@@ -36,5 +98,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(JSON.stringify({ timestamp: new Date().toISOString(), event: 'server_start', port: PORT }));
 });
