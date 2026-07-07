@@ -49,18 +49,20 @@ app.use((req, res, next) => {
     // Skip health-check noise in logs
     if (req.path === '/health') return;
 
+    const elapsedMs = Date.now() - startMs;
     const log = {
       timestamp: new Date().toISOString(),
       visitor_id: req.visitorId,
       method: req.method,
       path: req.path,
       status: res.statusCode,
-      duration_ms: Date.now() - startMs,
+      duration_ms: elapsedMs,
+      duration_seconds: parseFloat((elapsedMs / 1000).toFixed(3)),
+      client_ip: req.headers['x-forwarded-for']
+                   ? req.headers['x-forwarded-for'].split(',')[0].trim()
+                   : req.socket.remoteAddress,
       referrer: req.headers['referer'] || null,
       user_agent: req.headers['user-agent'] || null,
-      ip: req.headers['x-forwarded-for']
-            ? req.headers['x-forwarded-for'].split(',')[0].trim()
-            : req.socket.remoteAddress,
     };
 
     process.stdout.write(JSON.stringify(log) + '\n');
