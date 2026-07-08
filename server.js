@@ -4,6 +4,40 @@
 const express = require('express');
 const path = require('path');
 const crypto = require('crypto');
+const https = require('https');
+
+// ── IP Geolocation ────────────────────────────────────────────────────────────
+// Looks up an IP via ip-api.com (free tier: 45 req/min).
+// Returns an object with geo fields, or null if the IP is private/unroutable.
+const PRIVATE_IP_RE = /^(127\.|10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|::1$|fc|fd)/;
+
+function geoLookup(ip) {
+  if (!ip || PRIVATE_IP_RE.test(ip)) return Promise.resolve(null);
+  return new Promise(resolve => {
+    const url = `https://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,countryCode,regionName,city,lat,lon,isp,org`;
+    https.get(url, res => {
+      let body = '';
+      res.on('data', chunk => { body += chunk; });
+      res.on('end', () => {
+        try {
+          const d = JSON.parse(body);
+          if (d.status !== 'success') return resolve(null);
+          resolve({
+            geo_country: d.country || null,
+            geo_country_code: d.countryCode || null,
+            geo_region: d.regionName || null,
+            geo_city: d.city || null,
+            geo_lat: d.lat ?? null,
+            geo_lon: d.lon ?? null,
+            geo_isp: d.isp || null,
+            geo_org: d.org || null,
+          });
+        } catch { resolve(null); }
+      });
+      res.on('error', () => resolve(null));
+    }).on('error', () => resolve(null));
+  });
+}
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -65,7 +99,7 @@ app.use((req, res, next) => {
       xForwardedForLast ||
       req.socket.remoteAddress;
 
-    const log = {
+    const baseLog = {
       timestamp: new Date().toISOString(),
       visitor_id: req.visitorId,
       method: req.method,
@@ -80,7 +114,10 @@ app.use((req, res, next) => {
       user_agent: req.headers['user-agent'] || null,
     };
 
-    process.stdout.write(JSON.stringify(log) + '\n');
+    // Fire geo lookup after response is sent — does not affect response time.
+    geoLookup(clientIp).then(geo => {
+      process.stdout.write(JSON.stringify({ ...baseLog, ...geo }) + '\n');
+    });
   });
 
   next();
