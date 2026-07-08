@@ -154,3 +154,14 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(JSON.stringify({ timestamp: new Date().toISOString(), event: 'server_start', port: PORT }));
 });
+
+// ── Safety nets ───────────────────────────────────────────────────────────────
+// Prevent unhandled rejections / exceptions from crashing the process and
+// triggering Code Engine's high-restart-rate alarm.
+process.on('unhandledRejection', (reason) => {
+  process.stderr.write(JSON.stringify({ timestamp: new Date().toISOString(), event: 'unhandledRejection', reason: String(reason) }) + '\n');
+});
+
+process.on('uncaughtException', (err) => {
+  process.stderr.write(JSON.stringify({ timestamp: new Date().toISOString(), event: 'uncaughtException', error: err.message, stack: err.stack }) + '\n');
+});
