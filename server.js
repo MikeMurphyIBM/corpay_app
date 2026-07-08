@@ -54,11 +54,15 @@ app.use((req, res, next) => {
     if (req.path === '/health') return;
 
     const elapsedMs = Date.now() - startMs;
-    // x-envoy-external-address is the cleanest single external IP in Code Engine
-    // x-forwarded-for is the fallback (first entry), then socket IP as last resort
+    // x-envoy-external-address is the cleanest single external IP in Code Engine.
+    // x-forwarded-for may contain multiple hops; last entry is closest to real client.
+    const xForwardedFor = req.headers['x-forwarded-for'];
+    const xForwardedForLast = xForwardedFor
+      ? xForwardedFor.split(',').map(s => s.trim()).filter(Boolean).pop()
+      : null;
     const clientIp =
       req.headers['x-envoy-external-address'] ||
-      (req.headers['x-forwarded-for'] && req.headers['x-forwarded-for'].split(',')[0].trim()) ||
+      xForwardedForLast ||
       req.socket.remoteAddress;
 
     const log = {
@@ -70,6 +74,8 @@ app.use((req, res, next) => {
       duration_ms: elapsedMs,
       duration_seconds: parseFloat((elapsedMs / 1000).toFixed(3)),
       client_ip: clientIp,
+      x_envoy_external_address: req.headers['x-envoy-external-address'] || null,
+      x_forwarded_for: xForwardedFor || null,
       referrer: req.headers['referer'] || null,
       user_agent: req.headers['user-agent'] || null,
     };
