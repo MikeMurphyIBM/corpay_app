@@ -88,15 +88,15 @@ app.use((req, res, next) => {
     if (req.path === '/health') return;
 
     const elapsedMs = Date.now() - startMs;
-    // x-envoy-external-address is the cleanest single external IP in Code Engine.
-    // x-forwarded-for may contain multiple hops; last entry is closest to real client.
+    // Per IBM Code Engine docs: the FIRST entry in x-forwarded-for is the real
+    // external client IP. Subsequent entries (172.30.x.x, 127.0.0.6) are internal
+    // ingress/sidecar hops added by Code Engine's Knative/Envoy stack.
     const xForwardedFor = req.headers['x-forwarded-for'];
-    const xForwardedForLast = xForwardedFor
-      ? xForwardedFor.split(',').map(s => s.trim()).filter(Boolean).pop()
+    const xForwardedForFirst = xForwardedFor
+      ? xForwardedFor.split(',')[0].trim()
       : null;
     const clientIp =
-      req.headers['x-envoy-external-address'] ||
-      xForwardedForLast ||
+      xForwardedForFirst ||
       req.socket.remoteAddress;
 
     const baseLog = {
@@ -126,6 +126,16 @@ app.use((req, res, next) => {
 // ── Health check — required by IBM Cloud Code Engine ─────────────────────────
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
+});
+
+// ── Debug: echo all request headers (temporary — remove after IP is confirmed) ─
+app.get('/debug/headers', (req, res) => {
+  res.json({
+    headers: req.headers,
+    x_forwarded_for: req.headers['x-forwarded-for'] || null,
+    x_forwarded_for_first: (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || null,
+    socket_remote_address: req.socket.remoteAddress,
+  });
 });
 
 // Serve all frontend assets from /public
