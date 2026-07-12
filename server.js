@@ -46,6 +46,20 @@ const PORT = process.env.PORT || 8080;
 // '1' means trust exactly one upstream proxy (the Code Engine ingress).
 app.set('trust proxy', 1);
 
+// ── Old URL redirect ──────────────────────────────────────────────────────────
+// Any request arriving on the raw Code Engine hostname is permanently redirected
+// to the canonical Cloudflare domain. Path and query string are preserved.
+const CANONICAL_HOST = 'corpay.mhm-ibm.net';
+const CE_HOST_RE = /\.codeengine\.appdomain\.cloud$/i;
+
+app.use((req, res, next) => {
+  if (CE_HOST_RE.test(req.hostname)) {
+    const redirectUrl = `https://${CANONICAL_HOST}${req.originalUrl}`;
+    return res.redirect(301, redirectUrl);
+  }
+  next();
+});
+
 // ── Cookie parser (no external dep — parse manually) ─────────────────────────
 function parseCookies(cookieHeader) {
   const cookies = {};
@@ -88,14 +102,15 @@ app.use((req, res, next) => {
     if (req.path === '/health') return;
 
     const elapsedMs = Date.now() - startMs;
-    // Per IBM Code Engine docs: the FIRST entry in x-forwarded-for is the real
-    // external client IP. Subsequent entries (172.30.x.x, 127.0.0.6) are internal
-    // ingress/sidecar hops added by Code Engine's Knative/Envoy stack.
+    // Cloudflare injects CF-Connecting-IP with the real visitor IP.
+    // This is the most reliable source when traffic is proxied through Cloudflare.
+    // Fall back to first x-forwarded-for entry, then socket address.
     const xForwardedFor = req.headers['x-forwarded-for'];
     const xForwardedForFirst = xForwardedFor
       ? xForwardedFor.split(',')[0].trim()
       : null;
     const clientIp =
+      req.headers['cf-connecting-ip'] ||
       xForwardedForFirst ||
       req.socket.remoteAddress;
 
@@ -108,7 +123,9 @@ app.use((req, res, next) => {
       duration_ms: elapsedMs,
       duration_seconds: parseFloat((elapsedMs / 1000).toFixed(3)),
       client_ip: clientIp,
-      x_envoy_external_address: req.headers['x-envoy-external-address'] || null,
+      cf_connecting_ip: req.headers['cf-connecting-ip'] || null,
+      cf_ipcountry: req.headers['cf-ipcountry'] || null,
+      cf_ray: req.headers['cf-ray'] || null,
       x_forwarded_for: xForwardedFor || null,
       referrer: req.headers['referer'] || null,
       user_agent: req.headers['user-agent'] || null,
