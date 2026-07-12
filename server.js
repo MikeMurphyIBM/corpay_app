@@ -145,16 +145,6 @@ app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// ── Debug: echo all request headers (temporary — remove after IP is confirmed) ─
-app.get('/debug/headers', (req, res) => {
-  res.json({
-    headers: req.headers,
-    x_forwarded_for: req.headers['x-forwarded-for'] || null,
-    x_forwarded_for_first: (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || null,
-    socket_remote_address: req.socket.remoteAddress,
-  });
-});
-
 // Serve all frontend assets from /public
 app.use(express.static(path.join(__dirname, 'public')));
 
