@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBM Concert — Corpay IT Operations Briefing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; font-size: 16px; }
+body {
+  min-height: 100%;
+  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #07111f;
+  color: #1a2535;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   BACKGROUND
+   ============================================================ */
+.bg-layer {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: url('/images/2ndpagebackground.jpg');
+  background-size: cover; background-position: center;
+}
+.bg-layer::before, .bg-layer::after { content: none; }
+
+/* ============================================================
+   CORPAY LOGO
+   ============================================================ */
+.corpay-logo {
+  position: fixed; top: 20px; left: 24px; z-index: 300;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 1.05rem;
+  font-weight: 700; color: #fff; letter-spacing: 0.02em;
+  display: flex; align-items: center; gap: 2px; text-decoration: none;
+}
+.corpay-logo__caret { color: #da1e28; font-size: 1.1rem; line-height: 1; }
+
+/* ============================================================
+   ROTATE PROMPT
+   ============================================================ */
+.rotate-prompt {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  background: #07111f; flex-direction: column; align-items: center;
+  justify-content: center; gap: 20px; text-align: center; padding: 32px;
+}
+.rotate-prompt__icon { width: 64px; height: 64px; animation: rotate-hint 2s ease-in-out infinite; }
+@keyframes rotate-hint {
+  0%, 100% { transform: rotate(0deg); }
+  40%       { transform: rotate(90deg); }
+  60%       { transform: rotate(90deg); }
+}
+.rotate-prompt p { font-size: 1rem; color: rgba(255,255,255,0.75); line-height: 1.6; max-width: 280px; }
+.rotate-prompt__dismiss { margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.35); cursor: pointer; background: none; border: none; font-family: inherit; text-decoration: underline; }
+@media (max-width: 768px) and (orientation: portrait) { .rotate-prompt { display: flex; } }
+
+/* ============================================================
+   PAMPHLET SCENE
+   ============================================================ */
+.pamphlet-scene {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 40px 20px;
+}
+
+.pamphlet-wrapper {
+  position: relative; display: flex; align-items: center; justify-content: center;
+}
+
+/* ============================================================
+   CLOSED PAMPHLET COVER
+   ============================================================ */
+.pamphlet-cover {
+  width: 300px; height: 400px; position: relative; cursor: pointer;
+  transform: perspective(900px) rotateY(-4deg) rotateX(1deg) rotate(2deg);
+  transition: transform 0.35s ease, filter 0.35s ease;
+  filter: drop-shadow(6px 16px 36px rgba(0,0,0,0.75)) drop-shadow(2px 4px 8px rgba(0,0,0,0.4));
+  user-select: none;
+}
+
+.pamphlet-cover:hover {
+  transform: perspective(900px) rotateY(-7deg) rotateX(2deg) rotate(2.5deg) translateY(-8px);
+  filter: drop-shadow(10px 24px 48px rgba(0,0,0,0.85)) drop-shadow(2px 4px 8px rgba(0,0,0,0.5));
+}
+
+/* Page stack behind cover */
+.pamphlet-cover__pages {
+  position: absolute; top: 4px; right: -7px; bottom: 0; width: 100%;
+  background: linear-gradient(90deg, #e8e0cc 0%, #d4c9b0 100%);
+  border-radius: 2px 4px 4px 2px;
+}
+.pamphlet-cover__pages::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0px, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+  border-radius: inherit;
+}
+
+/* Cover face */
+.pamphlet-cover__face {
+  position: relative; z-index: 2;
+  width: 100%; height: 100%;
+  background: linear-gradient(150deg, #6b3d14 0%, #4a2808 30%, #5c3310 60%, #7a4a1e 100%);
+  border-radius: 3px 4px 4px 3px;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+  padding: 28px 26px 24px 28px; overflow: hidden;
+}
+
+/* leather grain */
+.pamphlet-cover__face::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(92deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px),
+    repeating-linear-gradient(2deg, transparent 0px, transparent 4px, rgba(0,0,0,0.025) 4px, rgba(0,0,0,0.025) 5px);
+  pointer-events: none;
+}
+
+/* Cord SVG — top left corner */
+.pamphlet-cover__cord { position: absolute; top: 0; left: 0; z-index: 10; pointer-events: none; }
+
+.cover__ibm-bar { width: 100%; height: 2px; background: rgba(15,98,254,0.9); margin-bottom: 22px; margin-top: 36px; box-shadow: 0 0 8px rgba(15,98,254,0.4); position: relative; z-index: 1; }
+.cover__eyebrow { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(235,210,170,0.6); margin-bottom: 14px; position: relative; z-index: 1; }
+.cover__title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.3rem; font-weight: 700; color: #f0ddb0; text-shadow: 0 1px 2px rgba(0,0,0,0.6); line-height: 1.25; margin-bottom: 8px; position: relative; z-index: 1; }
+.cover__subtitle { font-size: 0.7rem; color: rgba(220,185,130,0.52); line-height: 1.55; margin-bottom: 22px; position: relative; z-index: 1; }
+.cover__logo { font-size: 0.9rem; font-weight: 700; letter-spacing: 0.12em; color: rgba(220,185,130,0.65); position: relative; z-index: 1; }
+.cover__hint { position: absolute; bottom: 16px; right: 16px; font-size: 0.58rem; color: rgba(220,185,130,0.28); letter-spacing: 0.08em; text-transform: uppercase; z-index: 1; }
+
+/* ============================================================
+   OPEN PAMPHLET — hidden until cover clicked
+   ============================================================ */
+.pamphlet-open {
+  display: none; width: min(1100px, 96vw); position: relative;
+}
+.pamphlet-open.is-visible { display: block; }
+
+/* Two-page spread container */
+.pbook { width: 100%; position: relative; }
+
+/* Gutter shadow */
+.pbook::before {
+  content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 20px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.28) 35%, rgba(0,0,0,0.28) 65%, rgba(0,0,0,0.08) 100%);
+  z-index: 10; pointer-events: none;
+}
+
+/* Drop shadow */
+.pbook::after {
+  content: ''; position: absolute; bottom: -28px; left: 2%; right: 2%; height: 32px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, transparent 75%);
+  pointer-events: none;
+}
+
+/* Spreads */
+.pspread { display: none; width: 100%; }
+.pspread.is-active { display: grid; grid-template-columns: 1fr 1fr; }
+
+@keyframes pflip-next {
+  0%   { opacity: 1; transform: scaleX(1); }
+  50%  { opacity: 0; transform: scaleX(0); }
+  51%  { opacity: 0; transform: scaleX(0); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+@keyframes pflip-prev {
+  0%   { opacity: 1; transform: scaleX(1); }
+  50%  { opacity: 0; transform: scaleX(0); }
+  51%  { opacity: 0; transform: scaleX(0); }
+  100% { opacity: 1; transform: scaleX(1); }
+}
+.pspread.flip-next { animation: pflip-next 0.4s ease forwards; }
+.pspread.flip-prev  { animation: pflip-prev 0.4s ease forwards; }
+
+/* Pages */
+.ppage {
+  background: #ede8d8; min-height: 620px; padding: 52px 44px 52px 48px;
+  position: relative; overflow: hidden;
+}
+.ppage::before {
+  content: ''; position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(0,0,0,0.018) 1px, transparent 1px),
+    repeating-linear-gradient(88deg, transparent 0px, transparent 6px, rgba(0,0,0,0.008) 6px, rgba(0,0,0,0.008) 7px);
+  background-size: 3px 3px, 100% 100%; pointer-events: none; z-index: 0;
+}
+.ppage > * { position: relative; z-index: 1; }
+.ppage--left { box-shadow: inset -12px 0 20px rgba(0,0,0,0.10), inset 0 0 40px rgba(0,0,0,0.04); }
+.ppage--right { background: #ede8d8; box-shadow: inset 12px 0 20px rgba(0,0,0,0.10), inset 0 0 40px rgba(0,0,0,0.04), inset -4px 0 8px rgba(0,0,0,0.04); }
+.ppage--left::after { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 12px; background: linear-gradient(90deg, rgba(90,50,15,0.18) 0%, rgba(90,50,15,0.06) 60%, transparent 100%); pointer-events: none; z-index: 2; }
+.ppage--right::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 18px; background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.03) 60%, rgba(0,0,0,0.07) 100%); pointer-events: none; z-index: 2; }
+
+/* Nav arrows */
+.pbook-nav {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 56px; background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 4px;
+  cursor: pointer; font-size: 1.2rem; color: rgba(255,255,255,0.6);
+  transition: background 0.2s, color 0.2s; user-select: none;
+}
+.pbook-nav:hover { background: rgba(255,255,255,0.15); color: #fff; }
+.pbook-nav--prev { left: -56px; }
+.pbook-nav--next { right: -56px; }
+.pbook-nav.is-hidden { opacity: 0; pointer-events: none; }
+
+/* Page numbers */
+.ppage-num { position: absolute; bottom: 20px; font-size: 0.68rem; color: #9ca3af; font-style: italic; }
+.ppage--left  .ppage-num { left: 44px; }
+.ppage--right .ppage-num { right: 44px; }
+
+/* Spread dots */
+.pspread-indicator { display: flex; justify-content: center; gap: 8px; margin-top: 20px; }
+.pspread-indicator__dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,0.2); cursor: pointer; transition: background 0.2s, transform 0.2s; border: none; }
+.pspread-indicator__dot.is-active { background: #0f62fe; transform: scale(1.2); }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.p-eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #0f62fe; margin-bottom: 20px; }
+.p-headline { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 2rem; font-weight: 700; color: #1a2535; line-height: 1.15; margin-bottom: 20px; }
+.p-subhead { font-size: 0.95rem; font-weight: 600; color: #1a2535; line-height: 1.5; margin-bottom: 14px; }
+.p-body { font-size: 0.88rem; color: #4b5563; line-height: 1.75; margin-bottom: 14px; }
+.p-rule { border: none; border-top: 1px solid rgba(0,0,0,0.1); margin: 20px 0; }
+
+/* TOC */
+.p-toc-title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.1rem; font-weight: 600; color: #1a2535; margin-bottom: 22px; padding-bottom: 10px; border-bottom: 2px solid #0f62fe; display: inline-block; }
+.p-toc-list { list-style: none; padding: 0; }
+.p-toc-list li { display: flex; align-items: baseline; gap: 8px; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+.p-toc-list li:last-child { border-bottom: none; }
+.p-toc-num { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0f62fe; flex-shrink: 0; width: 28px; }
+.p-toc-label { font-size: 0.9rem; font-weight: 500; color: #1a2535; flex: 1; }
+.p-toc-dots { flex: 1; border-bottom: 1px dotted rgba(0,0,0,0.2); margin: 0 8px; align-self: center; min-width: 20px; }
+.p-toc-link { font-size: 0.75rem; color: #0f62fe; text-decoration: none; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.p-toc-link:hover { text-decoration: underline; }
+
+/* Observation pages */
+.p-obs-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #0f62fe; margin-bottom: 6px; }
+.p-obs-title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.35rem; font-weight: 600; color: #1a2535; line-height: 1.25; margin-bottom: 18px; }
+.p-obs-quote { background: #fff2a8; padding: 14px 16px; font-size: 0.88rem; font-style: italic; font-weight: 500; color: #1a2535; line-height: 1.55; border: none; margin-bottom: 8px; }
+.p-obs-quote-source { font-size: 0.7rem; font-style: normal; color: #6b7280; margin-bottom: 18px; display: block; }
+.p-insight-card { background: #eef4ff; border: 1px solid #c8d9f8; padding: 14px 16px; margin-bottom: 18px; }
+.p-insight-card__label { display: block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #0f62fe; margin-bottom: 7px; }
+.p-insight-card p { font-size: 0.84rem; color: #1a2535; line-height: 1.6; }
+.p-section-head { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6b7280; margin-bottom: 5px; margin-top: 14px; }
+.p-section-body { font-size: 0.84rem; color: #374151; line-height: 1.7; }
+.p-outcome-list { list-style: none; padding: 0; margin-top: 10px; }
+.p-outcome-list li { font-size: 0.82rem; color: #374151; padding: 4px 0 4px 16px; position: relative; border-bottom: 1px solid rgba(0,0,0,0.05); line-height: 1.5; }
+.p-outcome-list li::before { content: '→'; position: absolute; left: 0; color: #0f62fe; font-weight: 600; }
+
+/* Concert product badge */
+.concert-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #0f62fe; color: #fff; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 12px;
+  border-radius: 2px; margin-bottom: 18px;
+}
+.concert-dimension {
+  display: inline-block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: #0f62fe; background: #eef4ff;
+  border: 1px solid #c8d9f8; padding: 3px 8px; border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+/* Closing / next steps */
+.p-nextsteps-eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #0f62fe; margin-bottom: 14px; }
+.p-nextsteps-title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.6rem; font-weight: 700; color: #1a2535; line-height: 1.2; margin-bottom: 20px; }
+.p-nextsteps-body { font-size: 0.9rem; color: #374151; line-height: 1.8; margin-bottom: 24px; }
+.p-nextsteps-rule { border: none; border-top: 2px solid #0f62fe; width: 40px; margin-bottom: 24px; }
+.p-closing-quote { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.05rem; font-style: italic; color: #1a2535; line-height: 1.6; border-left: 3px solid #0f62fe; padding: 12px 18px; margin: 20px 0; }
+
+/* Closing right page — dark */
+.concert-closing-page {
+  height: 100%; min-height: 500px; display: flex; flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(150deg, #0a1f3d 0%, #0d2a4f 60%, #0f3060 100%);
+  border-radius: 0 4px 4px 0; padding: 44px; position: relative; overflow: hidden;
+}
+.concert-closing-page::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(15,98,254,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(15,98,254,0.06) 1px, transparent 1px);
+  background-size: 32px 32px; pointer-events: none;
+}
+.ccp__bar { width: 100%; height: 3px; background: #0f62fe; margin-bottom: 28px; }
+.ccp__eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 14px; }
+.ccp__title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: 1.4rem; font-weight: 700; color: #fff; line-height: 1.25; margin-bottom: 16px; }
+.ccp__subtitle { font-size: 0.82rem; color: rgba(255,255,255,0.55); line-height: 1.65; margin-bottom: 28px; }
+.ccp__footer { font-size: 0.65rem; color: rgba(255,255,255,0.25); margin-top: auto; }
+
+/* Mobile */
+@media (max-width: 900px) and (orientation: landscape) {
+  .pamphlet-open { width: 98vw; }
+  .ppage { padding: 28px 22px; min-height: 380px; }
+  .p-headline { font-size: 1.4rem; }
+  .p-obs-title { font-size: 1.05rem; }
+  .pbook-nav--prev { left: -36px; }
+  .pbook-nav--next { right: -36px; }
+  .pbook-nav { width: 30px; height: 44px; font-size: 1rem; }
+}
+@media (max-width: 600px) and (orientation: landscape) {
+  .ppage { padding: 18px 16px; }
+  .p-headline { font-size: 1.1rem; }
+  .p-body { font-size: 0.78rem; }
+  .p-obs-title { font-size: 0.95rem; }
+  .p-obs-quote { font-size: 0.78rem; padding: 10px 12px; }
+  .p-insight-card p { font-size: 0.76rem; }
+  .p-section-body { font-size: 0.76rem; }
+  .p-outcome-list li { font-size: 0.74rem; }
+}
+
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer" aria-hidden="true"></div>
+  <a class="corpay-logo" href="/report">Corpay<span class="corpay-logo__caret">^</span></a>
+
+  <!-- Rotate prompt -->
+  <div class="rotate-prompt" id="rotatePrompt" role="dialog" aria-label="Please rotate your device">
+    <svg class="rotate-prompt__icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="18" y="8" width="28" height="48" rx="4" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+      <rect x="22" y="14" width="20" height="36" rx="1" fill="rgba(15,98,254,0.2)" stroke="rgba(15,98,254,0.4)" stroke-width="1"/>
+      <circle cx="32" cy="54" r="2" fill="rgba(255,255,255,0.4)"/>
+      <path d="M44 30 L56 30 M50 24 L56 30 L50 36" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <p>For the best experience, please rotate your device to <strong style="color:#fff">landscape</strong> orientation to view both pages.</p>
+    <button class="rotate-prompt__dismiss" id="rotatePromptDismiss">Continue anyway</button>
+  </div>
+
+  <!-- Pamphlet scene -->
+  <div class="pamphlet-scene">
+    <div class="pamphlet-wrapper" id="pamphletWrapper">
+
+      <!-- CLOSED COVER -->
+      <div class="pamphlet-cover" id="pamphletCover" role="button" tabindex="0" aria-label="Open the IBM Concert briefing">
+        <div class="pamphlet-cover__pages"></div>
+        <div class="pamphlet-cover__face">
+          <!-- Leather cord binding -->
+          <svg class="pamphlet-cover__cord" width="60" height="60" viewBox="0 0 60 60" fill="none">
+            <path d="M4 4 Q16 2 18 18 Q20 32 8 34 Q2 36 4 4" stroke="#2a1505" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <path d="M4 4 Q2 16 18 18 Q32 20 34 8 Q36 2 4 4" stroke="#2a1505" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <circle cx="18" cy="18" r="5" fill="#3d1f08" stroke="#1a0c02" stroke-width="1"/>
+            <circle cx="18" cy="18" r="2.2" fill="#5c3010"/>
+            <path d="M18 23 Q17 34 14 42" stroke="#2a1505" stroke-width="2" stroke-linecap="round"/>
+            <path d="M23 18 Q34 17 42 14" stroke="#2a1505" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="cover__ibm-bar"></div>
+          <span class="cover__eyebrow">IBM Concert · Corpay Briefing</span>
+          <h1 class="cover__title">IT Operations<br>Risk Briefing</h1>
+          <p class="cover__subtitle">How IBM Concert Addresses<br>Corpay's Operational Challenges</p>
+          <div style="width:32px;height:1px;background:rgba(15,98,254,0.5);margin-bottom:14px;"></div>
+          <span class="cover__logo">IBM</span>
+          <span class="cover__hint">Click to open →</span>
+        </div>
+      </div>
+
+      <!-- OPEN PAMPHLET -->
+      <div class="pamphlet-open" id="pamphletOpen">
+
+        <button class="pbook-nav pbook-nav--prev is-hidden" id="pNavPrev" aria-label="Previous spread">‹</button>
+        <button class="pbook-nav pbook-nav--next" id="pNavNext" aria-label="Next spread">›</button>
+
+        <div class="pbook" id="pbook">
+
+          <!-- =====================================================
+               SPREAD 0 — Intro / Table of Contents
+               ===================================================== -->
+          <div class="pspread is-active" data-spread="0">
+
+            <div class="ppage ppage--left">
+              <p class="p-eyebrow">IBM Concert · Corpay 2025 Form 10-K</p>
+              <h2 class="p-headline">Your 10-K.<br>Our Answer.</h2>
+              <p class="p-subhead">IBM Concert's AI-driven IT operations platform directly addresses five critical operational risks disclosed in Corpay's 2025 Form 10-K.</p>
+              <hr class="p-rule">
+              <p class="p-body">Corpay's annual report outlines specific concerns around cybersecurity, system reliability, M&amp;A complexity, regulatory compliance, and escalating technology costs. IBM Concert addresses each of these challenges through purpose-built AI dimensions — not generic IT tooling.</p>
+              <p class="p-body">This briefing maps Corpay's own disclosures to the specific Concert capabilities designed to solve them.</p>
+              <p class="p-body" style="font-size:0.78rem;color:#9ca3af;margin-top:auto;padding-top:24px;">Source: Corpay 2025 Form 10-K.</p>
+              <span class="ppage-num">i</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <p class="p-eyebrow">Contents</p>
+              <span class="p-toc-title">Table of Contents</span>
+              <ul class="p-toc-list">
+                <li>
+                  <span class="p-toc-num">01</span>
+                  <span class="p-toc-label">Cybersecurity &amp; Ransomware Risk</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="1">Open →</a>
+                </li>
+                <li>
+                  <span class="p-toc-num">02</span>
+                  <span class="p-toc-label">System Outages &amp; Software Defects</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="2">Open →</a>
+                </li>
+                <li>
+                  <span class="p-toc-num">03</span>
+                  <span class="p-toc-label">M&amp;A Integration Complexity</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="3">Open →</a>
+                </li>
+                <li>
+                  <span class="p-toc-num">04</span>
+                  <span class="p-toc-label">Global Regulatory Compliance</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="4">Open →</a>
+                </li>
+                <li>
+                  <span class="p-toc-num">05</span>
+                  <span class="p-toc-label">Escalating IT &amp; Cloud Costs</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="5">Open →</a>
+                </li>
+                <li>
+                  <span class="p-toc-num">→</span>
+                  <span class="p-toc-label">Next Steps</span>
+                  <span class="p-toc-dots"></span>
+                  <a class="p-toc-link" data-goto="6">Open →</a>
+                </li>
+              </ul>
+              <span class="ppage-num">ii</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 1 — Cybersecurity
+               ===================================================== -->
+          <div class="pspread" data-spread="1">
+
+            <div class="ppage ppage--left">
+              <p class="p-obs-label">Challenge 01 · Cybersecurity</p>
+              <h2 class="p-obs-title">Mitigating Severe Cybersecurity, Ransomware &amp; Data Breach Risks</h2>
+              <blockquote class="p-obs-quote">"Corpay electronically receives, processes, and stores highly sensitive data, including bank account information, social security numbers, and credit card details... systems are constantly targeted by bad actors using evolving techniques like ransomware and denial-of-service attacks."</blockquote>
+              <span class="p-obs-quote-source">— Corpay 2025 Form 10-K</span>
+              <div class="p-insight-card">
+                <span class="p-insight-card__label">Concert Dimensions</span>
+                <p><strong>Concert Protect</strong> and <strong>Concert Secure Coder</strong> proactively identify, prioritize, and remediate vulnerabilities before they reach production.</p>
+              </div>
+              <span class="ppage-num">1</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <span class="concert-dimension">Concert Protect</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Concert Protect identifies and prioritizes CVEs based on actual business impact and exploitability within Corpay's specific environment. It evaluates the "blast radius" of each vulnerability across code, infrastructure, and runtime dependencies — ensuring the highest-risk issues are addressed first.</p>
+              <span class="concert-dimension">Concert Secure Coder</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Embeds security directly into developers' workflows — scanning for vulnerabilities and exposed secrets while providing AI-assisted, automated remediations to fix vulnerable code before it reaches production. Concert also automates OS and middleware patching to address runtime vulnerabilities quickly.</p>
+              <ul class="p-outcome-list" style="margin-top:10px;">
+                <li>Prioritize CVEs by real business impact, not just severity score</li>
+                <li>Fix vulnerable code before it reaches production</li>
+                <li>Automate OS and middleware patching</li>
+                <li>Reduce exposure window for ransomware and breach vectors</li>
+              </ul>
+              <span class="ppage-num">2</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 2 — System Outages
+               ===================================================== -->
+          <div class="pspread" data-spread="2">
+
+            <div class="ppage ppage--left">
+              <p class="p-obs-label">Challenge 02 · Reliability</p>
+              <h2 class="p-obs-title">Preventing System Outages &amp; Software Defects</h2>
+              <blockquote class="p-obs-quote">"Corpay's business relies heavily on the efficient and uninterrupted operation of interconnected computer systems... system outages, software defects, or errors during updates could result in transaction delays, financial losses, contractual penalties, and regulatory scrutiny."</blockquote>
+              <span class="p-obs-quote-source">— Corpay 2025 Form 10-K</span>
+              <div class="p-insight-card">
+                <span class="p-insight-card__label">Concert Dimensions</span>
+                <p><strong>Concert Resilience</strong>, <strong>Concert Observe</strong>, and <strong>Concert Operate</strong> work together to prevent incidents and drastically reduce MTTR when they occur.</p>
+              </div>
+              <span class="ppage-num">3</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <span class="concert-dimension">Concert Resilience</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Maps signals from applications and infrastructure to evaluate system health against non-functional requirements — availability, scalability, and recoverability. Generates a resilience score and proactive recommendations to address gaps before they result in incidents.</p>
+              <span class="concert-dimension">Concert Observe + Concert Operate</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Provides full-stack visibility and AI-driven automated runbooks to detect cascading failures, identify root cause, and orchestrate immediate remediation — drastically reducing Mean Time To Resolution (MTTR).</p>
+              <ul class="p-outcome-list" style="margin-top:10px;">
+                <li>Identify resilience gaps before they cause outages</li>
+                <li>Detect cascading failures across interconnected systems</li>
+                <li>Automate remediation with AI-driven runbooks</li>
+                <li>Reduce MTTR and minimize transaction disruption</li>
+              </ul>
+              <span class="ppage-num">4</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 3 — M&A Integration
+               ===================================================== -->
+          <div class="pspread" data-spread="3">
+
+            <div class="ppage ppage--left">
+              <p class="p-obs-label">Challenge 03 · M&amp;A</p>
+              <h2 class="p-obs-title">Taming IT Complexity from Mergers &amp; Acquisitions</h2>
+              <blockquote class="p-obs-quote">"Corpay relies on acquisitions to drive growth, recently acquiring Paymerang, Alpha, and AvidXchange. Integrating new businesses, technologies, and operations can result in unforeseen operating difficulties, increased costs, and diverted management attention."</blockquote>
+              <span class="p-obs-quote-source">— Corpay 2025 Form 10-K</span>
+              <div class="p-insight-card">
+                <span class="p-insight-card__label">Concert Capability</span>
+                <p><strong>Concert</strong> acts as a unified control plane that connects insights across fragmented, siloed domains — without requiring a rip-and-replace of existing tools.</p>
+              </div>
+              <span class="ppage-num">5</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <p class="p-section-head">The Challenge</p>
+              <p class="p-section-body" style="margin-bottom:14px;">Each acquired company brings its own IT monitoring tools, infrastructure, and operational practices. Without a unifying layer, Corpay faces fragmented visibility, duplicated tooling costs, and governance gaps across its growing portfolio.</p>
+              <p class="p-section-head" style="margin-top:14px;">How Concert Solves It</p>
+              <p class="p-section-body" style="margin-bottom:14px;">Concert's Unified Entity Data Model creates a shared data layer that plugs newly acquired companies' varied IT tools directly into the platform — giving Corpay immediate, centralized visibility and governance over newly acquired infrastructure and applications without disrupting existing investments.</p>
+              <ul class="p-outcome-list" style="margin-top:10px;">
+                <li>Connect acquired IT tools without rip-and-replace</li>
+                <li>Immediate centralized visibility post-acquisition</li>
+                <li>Shared data model across all Corpay entities</li>
+                <li>Reduce integration costs and management distraction</li>
+              </ul>
+              <span class="ppage-num">6</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 4 — Compliance
+               ===================================================== -->
+          <div class="pspread" data-spread="4">
+
+            <div class="ppage ppage--left">
+              <p class="p-obs-label">Challenge 04 · Compliance</p>
+              <h2 class="p-obs-title">Ensuring Compliance with Complex Global Regulations</h2>
+              <blockquote class="p-obs-quote">"Corpay is subject to complex global regulations, including data privacy laws, anti-money laundering regulations, and PCI DSS. Failure to maintain compliance could lead to significant fines, intervention by card networks, and loss of business."</blockquote>
+              <span class="p-obs-quote-source">— Corpay 2025 Form 10-K</span>
+              <div class="p-insight-card">
+                <span class="p-insight-card__label">Concert Dimension</span>
+                <p><strong>Concert Compliance</strong> evaluates application deployments against PCI, NIST, and SOC 2 frameworks with AI-powered automated remediation and an evidence store.</p>
+              </div>
+              <span class="ppage-num">7</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <span class="concert-dimension">Concert Compliance</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Evaluates application deployments against predefined security standards and frameworks — including PCI DSS, NIST, and SOC 2. Assesses compliance gaps, tracks posture trends over time, and provides automated watsonx-powered remediation steps for failed controls.</p>
+              <p class="p-section-head" style="margin-top:14px;">AI-Powered Evidence Store</p>
+              <p class="p-section-body" style="margin-bottom:14px;">Concert includes an evidence store where AI automatically evaluates submitted text or PDF evidence against controls to determine whether the proof of compliance is sufficient — reducing manual audit preparation effort significantly.</p>
+              <ul class="p-outcome-list" style="margin-top:10px;">
+                <li>Continuous assessment against PCI, NIST, SOC 2</li>
+                <li>Track compliance posture trends over time</li>
+                <li>Automated remediation steps for failed controls</li>
+                <li>AI-evaluated evidence store reduces audit burden</li>
+              </ul>
+              <span class="ppage-num">8</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 5 — IT Costs
+               ===================================================== -->
+          <div class="pspread" data-spread="5">
+
+            <div class="ppage ppage--left">
+              <p class="p-obs-label">Challenge 05 · Cost</p>
+              <h2 class="p-obs-title">Controlling Escalating IT &amp; Cloud Costs</h2>
+              <blockquote class="p-obs-quote">"Corpay invests heavily in its technology infrastructure, reporting approximately $408 million spent in 2025 on capital and operating expenses to operate and enhance their technology systems."</blockquote>
+              <span class="p-obs-quote-source">— Corpay 2025 Form 10-K</span>
+              <div class="p-insight-card">
+                <span class="p-insight-card__label">Concert Dimension</span>
+                <p><strong>Concert Optimize</strong> (powered by IBM Turbonomic) continuously analyzes application demand to automatically manage performance and cost — preventing overprovisioning and containing cloud spend.</p>
+              </div>
+              <span class="ppage-num">9</span>
+            </div>
+
+            <div class="ppage ppage--right">
+              <span class="concert-dimension">Concert Optimize · IBM Turbonomic</span>
+              <p class="p-section-body" style="margin-bottom:14px;">Concert Optimize continuously analyzes application demand alongside infrastructure and cloud signals to automatically manage performance and cost. It dynamically generates rightsizing recommendations and intelligent resource alignment to prevent overprovisioning.</p>
+              <p class="p-section-head" style="margin-top:14px;">Balancing Performance and Cost</p>
+              <p class="p-section-body" style="margin-bottom:14px;">Rather than choosing between application performance and cost governance, Concert Optimize balances both simultaneously — ensuring Corpay's $408M technology investment is allocated where it delivers the most value.</p>
+              <ul class="p-outcome-list" style="margin-top:10px;">
+                <li>Continuous rightsizing recommendations</li>
+                <li>Prevent cloud overprovisioning automatically</li>
+                <li>Balance application performance with cost governance</li>
+                <li>Reduce waste across infrastructure and cloud spend</li>
+              </ul>
+              <span class="ppage-num">10</span>
+            </div>
+          </div>
+
+          <!-- =====================================================
+               SPREAD 6 — Next Steps
+               ===================================================== -->
+          <div class="pspread" data-spread="6">
+
+            <div class="ppage ppage--left">
+              <p class="p-nextsteps-eyebrow">IBM Recommended Next Steps</p>
+              <hr class="p-nextsteps-rule">
+              <h2 class="p-nextsteps-title">From Risk Disclosure<br>to Operational Clarity</h2>
+              <p class="p-nextsteps-body">All five challenges share a common theme: Corpay's operational risk is growing faster than traditional IT management tools can address it. IBM Concert brings AI-driven intelligence across security, reliability, compliance, integration, and cost — from a single unified platform.</p>
+              <blockquote class="p-closing-quote">Concert doesn't replace your existing tools. It connects them — and makes them intelligent.</blockquote>
+              <p class="p-body" style="margin-top:16px; font-size: 0.84rem;">Let IBM show you how Concert can be deployed against your highest-priority operational risk within 30 days.</p>
+              <span class="ppage-num">11</span>
+            </div>
+
+            <div class="ppage ppage--right" style="padding:0;background:transparent;">
+              <div class="concert-closing-page">
+                <div>
+                  <div class="ccp__bar"></div>
+                  <p class="ccp__eyebrow">IBM Concert · 2026</p>
+                  <h2 class="ccp__title">AI-Powered IT<br>Operations for<br>Corpay</h2>
+                  <p class="ccp__subtitle">IBM Concert unifies security, observability, resilience, compliance, and cost optimization into a single AI-driven platform — purpose-built for enterprises managing complex, high-stakes IT environments.</p>
+                  <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+                    <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">→ Concert Protect &amp; Secure Coder</span>
+                    <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">→ Concert Resilience, Observe &amp; Operate</span>
+                    <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">→ Concert Compliance</span>
+                    <span style="font-size:0.72rem;color:rgba(255,255,255,0.5);">→ Concert Optimize (IBM Turbonomic)</span>
+                  </div>
+                </div>
+                <p class="ccp__footer">Contact: aionz@us.ibm.com · © 2026 IBM Corporation</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /pbook -->
+
+        <div class="pspread-indicator" id="pSpreadIndicator"></div>
+
+      </div><!-- /pamphlet-open -->
+
+    </div><!-- /pamphlet-wrapper -->
+  </div><!-- /pamphlet-scene -->
+
+  <script>
+  (function () {
+    'use strict';
+
+    var TOTAL = 7; // spreads 0–6
+    var current = 0;
+    var animating = false;
+
+    var cover     = document.getElementById('pamphletCover');
+    var open      = document.getElementById('pamphletOpen');
+    var navPrev   = document.getElementById('pNavPrev');
+    var navNext   = document.getElementById('pNavNext');
+    var indicator = document.getElementById('pSpreadIndicator');
+    var spreads   = document.querySelectorAll('.pspread');
+
+    // Build dots
+    for (var i = 0; i < TOTAL; i++) {
+      var dot = document.createElement('button');
+      dot.className = 'pspread-indicator__dot' + (i === 0 ? ' is-active' : '');
+      dot.setAttribute('aria-label', 'Go to spread ' + (i + 1));
+      dot.setAttribute('data-index', i);
+      indicator.appendChild(dot);
+    }
+
+    indicator.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pspread-indicator__dot');
+      if (!btn) return;
+      goTo(parseInt(btn.getAttribute('data-index'), 10));
+    });
+
+    function openPamphlet() {
+      cover.style.transition = 'transform 0.5s ease, opacity 0.4s ease';
+      cover.style.transform  = 'rotateY(-90deg) scale(0.8)';
+      cover.style.opacity    = '0';
+      setTimeout(function () {
+        cover.style.display = 'none';
+        open.classList.add('is-visible');
+      }, 450);
+    }
+
+    cover.addEventListener('click', openPamphlet);
+    cover.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPamphlet(); }
+    });
+
+    function goTo(index, direction) {
+      if (animating || index === current) return;
+      if (index < 0 || index >= TOTAL) return;
+      animating = true;
+      var dir = direction || (index > current ? 'next' : 'prev');
+      var outgoing = spreads[current];
+      var incoming = spreads[index];
+      outgoing.classList.add('flip-' + dir);
+      setTimeout(function () {
+        outgoing.classList.remove('is-active', 'flip-next', 'flip-prev');
+        incoming.classList.add('is-active');
+        incoming.classList.add('flip-' + dir);
+        setTimeout(function () {
+          incoming.classList.remove('flip-next', 'flip-prev');
+          animating = false;
+        }, 200);
+        current = index;
+        updateNav();
+      }, 200);
+    }
+
+    function updateNav() {
+      navPrev.classList.toggle('is-hidden', current === 0);
+      navNext.classList.toggle('is-hidden', current === TOTAL - 1);
+      document.querySelectorAll('.pspread-indicator__dot').forEach(function (dot, i) {
+        dot.classList.toggle('is-active', i === current);
+      });
+    }
+
+    navPrev.addEventListener('click', function () { goTo(current - 1, 'prev'); });
+    navNext.addEventListener('click', function () { goTo(current + 1, 'next'); });
+
+    document.addEventListener('keydown', function (e) {
+      if (!open.classList.contains('is-visible')) return;
+      if (e.key === 'ArrowRight') goTo(current + 1, 'next');
+      if (e.key === 'ArrowLeft')  goTo(current - 1, 'prev');
+    });
+
+    // TOC links
+    document.querySelectorAll('.p-toc-link[data-goto]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = parseInt(this.getAttribute('data-goto'), 10);
+        if (!open.classList.contains('is-visible')) openPamphlet();
+        setTimeout(function () { goTo(target); }, open.classList.contains('is-visible') ? 0 : 500);
+      });
+    });
+
+    // Rotate prompt
+    var dismiss = document.getElementById('rotatePromptDismiss');
+    var prompt  = document.getElementById('rotatePrompt');
+    if (dismiss) dismiss.addEventListener('click', function () { prompt.style.display = 'none'; });
+    window.addEventListener('orientationchange', function () {
+      setTimeout(function () {
+        if (window.innerWidth > window.innerHeight) prompt.style.display = 'none';
+      }, 300);
+    });
+
+    // Touch swipe
+    var touchStartX = 0;
+    document.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', function (e) {
+      if (!open.classList.contains('is-visible')) return;
+      var dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) < 50) return;
+      if (dx < 0) goTo(current + 1, 'next');
+      else         goTo(current - 1, 'prev');
+    }, { passive: true });
+
+  })();
+  </script>
+
+</body>
+</html>

@@ -153,9 +153,19 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Report page
+// Report selection page
 app.get('/report', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'report.html'));
+});
+
+// AI on Z brief
+app.get('/aionz', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'aionz.html'));
+});
+
+// Concert brief
+app.get('/concert', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'concert.html'));
 });
 
 // Workshop page

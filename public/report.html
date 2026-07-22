@@ -3,1001 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corpay 2025 Annual Report — IBM AI on Z</title>
+  <title>Corpay — IBM Briefings</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ============================================================
-   RESET + BASE
-   ============================================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+    background-color: #07111f;
+  }
 
-html {
-  height: 100%;
-  font-size: 16px;
-}
+  /* ── Background ── */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url('/images/2ndpagebackground.jpg');
+    background-size: cover; background-position: center;
+    pointer-events: none;
+  }
 
-body {
-  min-height: 100%;
-  font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
-  background-color: #07111f;
-  color: #1a2535;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
+  /* ── Corpay logo ── */
+  .corpay-logo {
+    position: fixed; top: 20px; left: 24px; z-index: 300;
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 1.05rem;
+    font-weight: 700; color: #fff; letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 2px; text-decoration: none;
+  }
+  .corpay-logo__caret { color: #da1e28; font-size: 1.1rem; line-height: 1; }
 
-/* ============================================================
-   DARK DESK BACKGROUND
-   ============================================================ */
-.bg-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url('/images/2ndpagebackground.jpg');
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
+  /* ── Prompt text ── */
+  .scene-prompt {
+    position: fixed; top: 22px; left: 50%; transform: translateX(-50%);
+    z-index: 300; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: rgba(255,255,255,0.35);
+    white-space: nowrap;
+  }
 
-/* No CSS overlays — let the photo speak */
-.bg-layer::before, .bg-layer::after { content: none; }
+  /* ── Desk scene container ── */
+  .desk-scene {
+    position: fixed; inset: 0; z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    gap: clamp(40px, 6vw, 100px);
+  }
 
-/* ============================================================
-   CORPAY LOGO — top left
-   ============================================================ */
-.corpay-logo {
-  position: fixed;
-  top: 20px;
-  left: 24px;
-  z-index: 300;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.02em;
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  text-decoration: none;
-}
-.corpay-logo__caret { color: #da1e28; font-size: 1.1rem; line-height: 1; }
+  /* ══════════════════════════════════════════════
+     LEATHER BOOK  (AI on Z)
+  ══════════════════════════════════════════════ */
+  .book-item {
+    position: relative;
+    transform: perspective(900px) rotateY(6deg) rotateX(2deg) rotate(-2deg);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    cursor: pointer; text-decoration: none; display: block;
+    border-radius: 4px 6px 6px 4px;
+    box-shadow:
+      -8px 4px 0px #3a2510,
+      -10px 6px 6px rgba(0,0,0,0.55),
+      8px 20px 48px rgba(0,0,0,0.75),
+      2px 4px 8px rgba(0,0,0,0.4);
+    width: clamp(180px, 18vw, 280px);
+    height: clamp(240px, 26vw, 380px);
+  }
 
-/* ============================================================
-   MOBILE LANDSCAPE PROMPT
-   ============================================================ */
-.rotate-prompt {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #07111f;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  text-align: center;
-  padding: 32px;
-}
+  .book-item:hover {
+    transform: perspective(900px) rotateY(10deg) rotateX(3deg) rotate(-2.5deg) translateY(-10px);
+    box-shadow:
+      -10px 5px 0px #3a2510,
+      -13px 8px 10px rgba(0,0,0,0.6),
+      14px 30px 64px rgba(0,0,0,0.85),
+      2px 4px 8px rgba(0,0,0,0.4);
+  }
 
-.rotate-prompt__icon {
-  width: 64px;
-  height: 64px;
-  animation: rotate-hint 2s ease-in-out infinite;
-}
+  .book-item__face {
+    width: 100%; height: 100%;
+    background: linear-gradient(160deg,
+      #7a4a1e 0%, #5c3310 20%, #6b3d14 40%,
+      #4a2808 60%, #5c3310 80%, #6e4018 100%);
+    border-radius: 4px 6px 6px 4px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: clamp(20px, 2.5vw, 36px) clamp(16px, 2vw, 28px) clamp(20px, 2.5vw, 36px) clamp(22px, 2.8vw, 40px);
+    position: relative; overflow: hidden;
+  }
 
-@keyframes rotate-hint {
-  0%, 100% { transform: rotate(0deg); }
-  40%       { transform: rotate(90deg); }
-  60%       { transform: rotate(90deg); }
-}
+  /* leather grain */
+  .book-item__face::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(92deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px),
+      repeating-linear-gradient(2deg, transparent 0px, transparent 4px, rgba(0,0,0,0.025) 4px, rgba(0,0,0,0.025) 5px);
+    border-radius: inherit; pointer-events: none;
+  }
 
-.rotate-prompt p {
-  font-size: 1rem;
-  color: rgba(255,255,255,0.75);
-  line-height: 1.6;
-  max-width: 280px;
-}
+  /* spine highlight */
+  .book-item__face::after {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 18px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 40%, transparent 100%);
+    border-right: 1px solid rgba(0,0,0,0.3); pointer-events: none;
+  }
 
-.rotate-prompt__dismiss {
-  margin-top: 8px;
-  font-size: 0.8rem;
-  color: rgba(255,255,255,0.35);
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: inherit;
-  text-decoration: underline;
-}
+  .book-item__bar { width: 100%; height: 2px; background: rgba(15,98,254,0.9); margin-bottom: clamp(14px,1.8vw,24px); box-shadow: 0 0 8px rgba(15,98,254,0.4); }
+  .book-item__eyebrow { font-size: clamp(0.48rem,0.6vw,0.58rem); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(235,210,170,0.6); margin-bottom: clamp(10px,1.4vw,16px); text-align: center; }
+  .book-item__title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: clamp(0.85rem,1.1vw,1.25rem); font-weight: 700; color: #f0ddb0; text-shadow: 0 1px 2px rgba(0,0,0,0.6); line-height: 1.25; text-align: center; margin-bottom: 8px; }
+  .book-item__subtitle { font-size: clamp(0.55rem,0.65vw,0.68rem); color: rgba(220,185,130,0.5); text-align: center; line-height: 1.5; margin-bottom: clamp(14px,1.8vw,24px); }
+  .book-item__logo { font-size: clamp(0.7rem,0.85vw,0.9rem); font-weight: 700; letter-spacing: 0.12em; color: rgba(220,185,130,0.65); }
+  .book-item__hint { position: absolute; bottom: 14px; right: 14px; font-size: 0.58rem; color: rgba(220,185,130,0.28); letter-spacing: 0.08em; text-transform: uppercase; }
 
-/* Show on portrait mobile */
-@media (max-width: 768px) and (orientation: portrait) {
-  .rotate-prompt { display: flex; }
-}
+  /* ══════════════════════════════════════════════
+     LEATHER PAMPHLET  (Concert)
+  ══════════════════════════════════════════════ */
+  .pamphlet-item {
+    position: relative;
+    transform: perspective(900px) rotateY(-4deg) rotateX(1deg) rotate(3deg);
+    transition: transform 0.35s ease, filter 0.35s ease;
+    cursor: pointer; text-decoration: none; display: block;
+    width: clamp(140px, 14vw, 220px);
+    height: clamp(190px, 21vw, 310px);
+    filter: drop-shadow(6px 16px 32px rgba(0,0,0,0.7)) drop-shadow(2px 4px 8px rgba(0,0,0,0.4));
+  }
 
-/* ============================================================
-   BOOK SCENE — 3D perspective container
-   ============================================================ */
-.book-scene {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 40px 20px;
-}
+  .pamphlet-item:hover {
+    transform: perspective(900px) rotateY(-7deg) rotateX(2deg) rotate(3.5deg) translateY(-10px);
+    filter: drop-shadow(8px 22px 44px rgba(0,0,0,0.85)) drop-shadow(2px 4px 8px rgba(0,0,0,0.5));
+  }
 
-/* ============================================================
-   BOOK WRAPPER — holds cover + open book
-   ============================================================ */
-.book-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  /* Stack of pages — visible edges on right side */
+  .pamphlet-item__pages {
+    position: absolute;
+    top: 3px; right: -5px; bottom: 0; width: 100%;
+    background: linear-gradient(90deg, #e8e0cc 0%, #d4c9b0 100%);
+    border-radius: 2px 4px 4px 2px;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
 
-/* ============================================================
-   CLOSED BOOK (cover)
-   ============================================================ */
-.book-cover {
-  width: 340px;
-  height: 460px;
-  position: relative;
-  cursor: pointer;
-  /* Slight 3-D tilt as if resting on the desk */
-  transform: perspective(900px) rotateY(6deg) rotateX(2deg) rotate(-1deg);
-  transform-origin: center center;
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  border-radius: 4px 6px 6px 4px;
-  /* Layered shadows: left spine depth, desk drop shadow, ambient */
-  box-shadow:
-    -8px 4px 0px #3a2510,           /* spine side thickness */
-    -10px 6px 6px rgba(0,0,0,0.55), /* spine shadow */
-    8px 20px 48px rgba(0,0,0,0.75), /* desk drop shadow */
-    2px 4px 8px rgba(0,0,0,0.4),    /* close ambient */
-    0 1px 0px rgba(255,255,255,0.06) inset; /* top highlight */
-  user-select: none;
-}
-
-.book-cover:hover {
-  transform: perspective(900px) rotateY(10deg) rotateX(3deg) rotate(-1.5deg) translateY(-6px);
-  box-shadow:
-    -10px 5px 0px #3a2510,
-    -13px 8px 10px rgba(0,0,0,0.6),
-    12px 28px 60px rgba(0,0,0,0.85),
-    2px 4px 8px rgba(0,0,0,0.4),
-    0 1px 0px rgba(255,255,255,0.08) inset;
-}
-
-.book-cover__face {
-  width: 100%;
-  height: 100%;
-  /* Leather brown gradient matching the journal in the photo */
-  background:
-    linear-gradient(160deg,
-      #7a4a1e 0%,
-      #5c3310 20%,
-      #6b3d14 40%,
-      #4a2808 60%,
-      #5c3310 80%,
-      #6e4018 100%
+  /* Page edge lines */
+  .pamphlet-item__pages::before {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0; width: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 3px,
+      rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px
     );
-  border-radius: 4px 6px 6px 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 32px 40px 44px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Leather grain texture overlay */
-.book-cover__face::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    repeating-linear-gradient(
-      92deg,
-      transparent 0px,
-      transparent 2px,
-      rgba(0,0,0,0.04) 2px,
-      rgba(0,0,0,0.04) 3px
-    ),
-    repeating-linear-gradient(
-      2deg,
-      transparent 0px,
-      transparent 4px,
-      rgba(0,0,0,0.025) 4px,
-      rgba(0,0,0,0.025) 5px
-    );
-  border-radius: inherit;
-  pointer-events: none;
-}
-
-/* Spine highlight — left edge catches light */
-.book-cover__face::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 22px;
-  background: linear-gradient(90deg,
-    rgba(255,255,255,0.12) 0%,
-    rgba(255,255,255,0.04) 40%,
-    transparent 100%
-  );
-  border-right: 1px solid rgba(0,0,0,0.3);
-  pointer-events: none;
-}
-
-.cover__ibm-bar {
-  width: 100%;
-  height: 2px;
-  background: rgba(15,98,254,0.9);
-  margin-bottom: 28px;
-  box-shadow: 0 0 8px rgba(15,98,254,0.4);
-}
-
-.cover__eyebrow {
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(235,210,170,0.65);
-  margin-bottom: 18px;
-  text-align: center;
-}
-
-.cover__title {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  /* Aged gold/cream embossed text effect */
-  color: #f0ddb0;
-  text-shadow:
-    0 1px 2px rgba(0,0,0,0.6),
-    0 -1px 0 rgba(255,255,255,0.08);
-  line-height: 1.25;
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.cover__subtitle {
-  font-size: 0.73rem;
-  color: rgba(220,185,130,0.55);
-  text-align: center;
-  line-height: 1.5;
-  margin-bottom: 28px;
-}
-
-.cover__ibm-bar-bottom {
-  width: 40px;
-  height: 1px;
-  background: rgba(15,98,254,0.5);
-  margin-bottom: 14px;
-}
-
-.cover__logo {
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: rgba(220,185,130,0.7);
-}
-
-.cover__click-hint {
-  position: absolute;
-  bottom: 18px;
-  right: 18px;
-  font-size: 0.62rem;
-  color: rgba(220,185,130,0.3);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-/* ============================================================
-   OPEN BOOK — hidden until cover is clicked
-   ============================================================ */
-.book-open {
-  display: none;
-  width: min(1100px, 96vw);
-  position: relative;
-}
-
-.book-open.is-visible {
-  display: block;
-}
-
-/* The 3D book container */
-.book {
-  width: 100%;
-  position: relative;
-  /* Slight perspective tilt on the open book too */
-  perspective: 1800px;
-}
-
-/* Gutter shadow between pages */
-.book::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 20px;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg,
-    rgba(0,0,0,0.08) 0%,
-    rgba(0,0,0,0.28) 35%,
-    rgba(0,0,0,0.28) 65%,
-    rgba(0,0,0,0.08) 100%
-  );
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Book drop shadow on desk */
-.book::after {
-  content: '';
-  position: absolute;
-  bottom: -28px;
-  left: 2%;
-  right: 2%;
-  height: 32px;
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, transparent 75%);
-  pointer-events: none;
-}
-
-/* ============================================================
-   SPREAD — one two-page view
-   ============================================================ */
-.spread {
-  display: none;
-  width: 100%;
-}
-
-.spread.is-active {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-/* ============================================================
-   PAGE — left or right
-   ============================================================ */
-.page {
-  /* Aged cream matching the journal pages in the photo */
-  background: #ede8d8;
-  min-height: 620px;
-  padding: 52px 44px 52px 48px;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Page texture — subtle paper grain */
-.page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle, rgba(0,0,0,0.018) 1px, transparent 1px),
-    repeating-linear-gradient(
-      88deg,
-      transparent 0px,
-      transparent 6px,
-      rgba(0,0,0,0.008) 6px,
-      rgba(0,0,0,0.008) 7px
-    );
-  background-size: 3px 3px, 100% 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* All page children sit above texture */
-.page > * { position: relative; z-index: 1; }
-
-.page--left {
-  border-radius: 0;
-  /* Left page has gutter darkening on the right edge */
-  box-shadow:
-    inset -12px 0 20px rgba(0,0,0,0.10),
-    inset 0 0 40px rgba(0,0,0,0.04);
-}
-
-.page--right {
-  border-radius: 0;
-  /* Slightly warmer/lighter — pages have different lighting */
-  background: #ede8d8;
-  /* Right page has gutter darkening on the left edge and outer edge curl */
-  box-shadow:
-    inset 12px 0 20px rgba(0,0,0,0.10),
-    inset 0 0 40px rgba(0,0,0,0.04),
-    inset -4px 0 8px rgba(0,0,0,0.04);
-}
-
-/* Outer cover wrap visible on left page — leather binding peeks around edge */
-.page--left::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 12px;
-  background: linear-gradient(90deg,
-    rgba(90,50,15,0.18) 0%,
-    rgba(90,50,15,0.06) 60%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Page-curl shadow on right page outer edge */
-.page--right::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 18px;
-  background: linear-gradient(90deg,
-    transparent 0%,
-    rgba(0,0,0,0.03) 60%,
-    rgba(0,0,0,0.07) 100%
-  );
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* ============================================================
-   PAGE NAVIGATION ARROWS
-   ============================================================ */
-.book-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 56px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1.2rem;
-  color: rgba(255,255,255,0.6);
-  transition: background 0.2s, color 0.2s;
-  user-select: none;
-}
-
-.book-nav:hover {
-  background: rgba(255,255,255,0.15);
-  color: #fff;
-}
-
-.book-nav--prev { left: -56px; }
-.book-nav--next { right: -56px; }
-
-.book-nav.is-hidden { opacity: 0; pointer-events: none; }
-
-/* ============================================================
-   PAGE FLIP ANIMATION
-   ============================================================ */
-@keyframes flip-next {
-  0%   { opacity: 1; transform: scaleX(1); }
-  50%  { opacity: 0; transform: scaleX(0); }
-  51%  { opacity: 0; transform: scaleX(0); }
-  100% { opacity: 1; transform: scaleX(1); }
-}
-
-@keyframes flip-prev {
-  0%   { opacity: 1; transform: scaleX(1); }
-  50%  { opacity: 0; transform: scaleX(0); }
-  51%  { opacity: 0; transform: scaleX(0); }
-  100% { opacity: 1; transform: scaleX(1); }
-}
-
-.spread.flip-next { animation: flip-next 0.4s ease forwards; }
-.spread.flip-prev  { animation: flip-prev 0.4s ease forwards; }
-
-/* ============================================================
-   PAGE NUMBER
-   ============================================================ */
-.page-num {
-  position: absolute;
-  bottom: 20px;
-  font-size: 0.68rem;
-  color: #9ca3af;
-  font-style: italic;
-}
-.page--left  .page-num { left: 44px; }
-.page--right .page-num { right: 44px; }
-
-/* ============================================================
-   SPREAD INDICATOR (dots)
-   ============================================================ */
-.spread-indicator {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 20px;
-}
-
-.spread-indicator__dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.spread-indicator__dot.is-active {
-  background: #0f62fe;
-  transform: scale(1.2);
-}
-
-/* ============================================================
-   TYPOGRAPHY — inside pages
-   ============================================================ */
-.page-eyebrow {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  margin-bottom: 20px;
-}
-
-.page-headline {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a2535;
-  line-height: 1.15;
-  margin-bottom: 20px;
-}
-
-.page-subhead {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a2535;
-  line-height: 1.5;
-  margin-bottom: 14px;
-}
-
-.page-body {
-  font-size: 0.88rem;
-  color: #4b5563;
-  line-height: 1.75;
-  margin-bottom: 14px;
-}
-
-.page-rule {
-  border: none;
-  border-top: 1px solid rgba(0,0,0,0.1);
-  margin: 20px 0;
-}
-
-/* ============================================================
-   TABLE OF CONTENTS
-   ============================================================ */
-.toc-title {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1a2535;
-  margin-bottom: 22px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #0f62fe;
-  display: inline-block;
-}
-
-.toc-list {
-  list-style: none;
-  padding: 0;
-}
-
-.toc-list li {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.07);
-}
-
-.toc-list li:last-child {
-  border-bottom: none;
-}
-
-.toc-num {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  flex-shrink: 0;
-  width: 28px;
-}
-
-.toc-label {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #1a2535;
-  flex: 1;
-}
-
-.toc-dots {
-  flex: 1;
-  border-bottom: 1px dotted rgba(0,0,0,0.2);
-  margin: 0 8px;
-  align-self: center;
-  min-width: 20px;
-}
-
-.toc-link {
-  font-size: 0.75rem;
-  color: #0f62fe;
-  text-decoration: none;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.toc-link:hover {
-  text-decoration: underline;
-}
-
-/* ============================================================
-   HORIZON / PARTNERSHIP SECTION
-   ============================================================ */
-.horizon-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #0f62fe;
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 5px 12px;
-  border-radius: 2px;
-  margin-bottom: 18px;
-}
-
-.horizon-badge__star {
-  font-size: 0.8rem;
-}
-
-.team-card {
-  background: #eef4ff;
-  border: 1px solid #c8d9f8;
-  border-left: 3px solid #0f62fe;
-  padding: 14px 16px;
-  margin-top: 16px;
-}
-
-.team-card__role {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  margin-bottom: 4px;
-}
-
-.team-card__name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a2535;
-  margin-bottom: 2px;
-}
-
-.team-card__desc {
-  font-size: 0.78rem;
-  color: #6b7280;
-  line-height: 1.5;
-}
-
-/* ============================================================
-   OBSERVATION PAGES
-   ============================================================ */
-.obs-label {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  margin-bottom: 6px;
-}
-
-.obs-title {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #1a2535;
-  line-height: 1.25;
-  margin-bottom: 18px;
-}
-
-.obs-quote {
-  background: #fff2a8;
-  padding: 14px 16px;
-  font-size: 0.88rem;
-  font-style: italic;
-  font-weight: 500;
-  color: #1a2535;
-  line-height: 1.55;
-  border: none;
-  margin-bottom: 8px;
-}
-
-.obs-quote-source {
-  font-size: 0.7rem;
-  font-style: normal;
-  color: #6b7280;
-  margin-bottom: 18px;
-  display: block;
-}
-
-.ibm-insight-card {
-  background: #eef4ff;
-  border: 1px solid #c8d9f8;
-  padding: 14px 16px;
-  margin-bottom: 18px;
-}
-
-.ibm-insight-card__label {
-  display: block;
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  margin-bottom: 7px;
-}
-
-.ibm-insight-card p {
-  font-size: 0.84rem;
-  color: #1a2535;
-  line-height: 1.6;
-}
-
-.obs-section-head {
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #6b7280;
-  margin-bottom: 5px;
-  margin-top: 14px;
-}
-
-.obs-section-body {
-  font-size: 0.84rem;
-  color: #374151;
-  line-height: 1.7;
-}
-
-.outcome-list {
-  list-style: none;
-  padding: 0;
-  margin-top: 10px;
-}
-
-.outcome-list li {
-  font-size: 0.82rem;
-  color: #374151;
-  padding: 4px 0 4px 16px;
-  position: relative;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
-  line-height: 1.5;
-}
-
-.outcome-list li::before {
-  content: '→';
-  position: absolute;
-  left: 0;
-  color: #0f62fe;
-  font-weight: 600;
-}
-
-/* ============================================================
-   NEXT STEPS PAGE
-   ============================================================ */
-.nextsteps-eyebrow {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #0f62fe;
-  margin-bottom: 14px;
-}
-
-.nextsteps-title {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #1a2535;
-  line-height: 1.2;
-  margin-bottom: 20px;
-}
-
-.nextsteps-body {
-  font-size: 0.9rem;
-  color: #374151;
-  line-height: 1.8;
-  margin-bottom: 24px;
-}
-
-.nextsteps-rule {
-  border: none;
-  border-top: 2px solid #0f62fe;
-  width: 40px;
-  margin-bottom: 24px;
-}
-
-/* ============================================================
-   WORKSHOP COVER PAGE (right page of next steps spread)
-   ============================================================ */
-.workshop-cover-link {
-  display: block;
-  text-decoration: none;
-  height: 100%;
-  cursor: pointer;
-}
-
-.workshop-cover-page {
-  height: 100%;
-  min-height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background: linear-gradient(150deg, #0a1f3d 0%, #0d2a4f 60%, #0f3060 100%);
-  border-radius: 0 4px 4px 0;
-  padding: 44px;
-  position: relative;
-  overflow: hidden;
-}
-
-.workshop-cover-page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(15,98,254,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15,98,254,0.06) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
-}
-
-.wcp__ibm-bar {
-  width: 100%;
-  height: 3px;
-  background: #0f62fe;
-  margin-bottom: 28px;
-}
-
-.wcp__eyebrow {
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
-  margin-bottom: 14px;
-}
-
-.wcp__title {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #fff;
-  line-height: 1.25;
-  margin-bottom: 16px;
-}
-
-.wcp__subtitle {
-  font-size: 0.82rem;
-  color: rgba(255,255,255,0.55);
-  line-height: 1.65;
-  margin-bottom: 28px;
-}
-
-.wcp__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  background: #0f62fe;
-  color: #fff;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 11px 20px;
-  border: none;
-  border-radius: 2px;
-  cursor: pointer;
-  letter-spacing: 0.02em;
-  width: fit-content;
-}
-
-.wcp__footer {
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.25);
-  margin-top: auto;
-}
-
-.wcp__hover-hint {
-  position: absolute;
-  inset: 0;
-  border: 2px solid transparent;
-  border-radius: 0 4px 4px 0;
-  transition: border-color 0.2s;
-  pointer-events: none;
-}
-
-.workshop-cover-link:hover .wcp__hover-hint {
-  border-color: rgba(15,98,254,0.5);
-}
-
-/* ============================================================
-   CLOSING PAGE
-   ============================================================ */
-.closing-quote {
-  font-family: 'IBM Plex Serif', Georgia, serif;
-  font-size: 1.05rem;
-  font-style: italic;
-  color: #1a2535;
-  line-height: 1.6;
-  border-left: 3px solid #0f62fe;
-  padding: 12px 18px;
-  margin: 20px 0;
-}
-
-/* ============================================================
-   MOBILE — landscape only
-   ============================================================ */
-@media (max-width: 900px) and (orientation: landscape) {
-  .book-open { width: 98vw; }
-  .page { padding: 28px 22px; min-height: 380px; }
-  .page-headline { font-size: 1.4rem; }
-  .obs-title { font-size: 1.05rem; }
-  .book-nav--prev { left: -36px; }
-  .book-nav--next { right: -36px; }
-  .book-nav { width: 30px; height: 44px; font-size: 1rem; }
-  .spread-indicator { margin-top: 12px; }
-}
-
-@media (max-width: 600px) and (orientation: landscape) {
-  .page { padding: 18px 16px; }
-  .page-headline { font-size: 1.1rem; }
-  .page-body { font-size: 0.78rem; }
-  .obs-title { font-size: 0.95rem; }
-  .obs-quote { font-size: 0.78rem; padding: 10px 12px; }
-  .ibm-insight-card p { font-size: 0.76rem; }
-  .obs-section-body { font-size: 0.76rem; }
-  .outcome-list li { font-size: 0.74rem; }
-  .toc-label { font-size: 0.8rem; }
-  .horizon-badge { font-size: 0.58rem; }
-}
-
+    border-radius: inherit;
+  }
+
+  /* Cover face */
+  .pamphlet-item__face {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    background: linear-gradient(150deg,
+      #6b3d14 0%, #4a2808 30%, #5c3310 60%, #7a4a1e 100%);
+    border-radius: 3px 4px 4px 3px;
+    display: flex; flex-direction: column;
+    align-items: flex-start; justify-content: flex-start;
+    padding: clamp(14px,1.8vw,22px) clamp(12px,1.5vw,18px);
+    overflow: hidden;
+  }
+
+  /* leather grain on pamphlet */
+  .pamphlet-item__face::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(92deg, transparent 0px, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 3px),
+      repeating-linear-gradient(2deg, transparent 0px, transparent 4px, rgba(0,0,0,0.025) 4px, rgba(0,0,0,0.025) 5px);
+    pointer-events: none;
+  }
+
+  /* Leather cord binding — top-left corner */
+  .pamphlet-item__cord {
+    position: absolute; top: 0; left: 0; z-index: 10; pointer-events: none;
+  }
+
+  .pamphlet-item__eyebrow { font-size: clamp(0.44rem,0.52vw,0.54rem); font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(235,210,170,0.55); margin-bottom: clamp(8px,1vw,14px); position: relative; z-index: 1; margin-top: clamp(10px,1.2vw,16px); }
+  .pamphlet-item__title { font-family: 'IBM Plex Serif', Georgia, serif; font-size: clamp(0.78rem,0.95vw,1.1rem); font-weight: 700; color: #f0ddb0; text-shadow: 0 1px 2px rgba(0,0,0,0.6); line-height: 1.3; margin-bottom: 8px; position: relative; z-index: 1; }
+  .pamphlet-item__subtitle { font-size: clamp(0.5rem,0.58vw,0.62rem); color: rgba(220,185,130,0.48); line-height: 1.5; position: relative; z-index: 1; }
+  .pamphlet-item__logo { position: absolute; bottom: 14px; right: 14px; font-size: clamp(0.62rem,0.75vw,0.8rem); font-weight: 700; letter-spacing: 0.12em; color: rgba(220,185,130,0.55); z-index: 1; }
+  .pamphlet-item__hint { position: absolute; bottom: 14px; left: 14px; font-size: 0.54rem; color: rgba(220,185,130,0.25); letter-spacing: 0.08em; text-transform: uppercase; z-index: 1; }
+
+  /* ── Rotate prompt ── */
+  .rotate-prompt {
+    display: none; position: fixed; inset: 0; z-index: 9999;
+    background: rgba(7,17,31,0.96); flex-direction: column;
+    align-items: center; justify-content: center; gap: 20px;
+    text-align: center; padding: 32px;
+  }
+  .rotate-prompt__icon { width: 64px; height: 64px; animation: rotate-hint 2s ease-in-out infinite; }
+  @keyframes rotate-hint {
+    0%, 100% { transform: rotate(0deg); }
+    40%       { transform: rotate(90deg); }
+    60%       { transform: rotate(90deg); }
+  }
+  .rotate-prompt p { font-size: 1rem; color: rgba(255,255,255,0.75); line-height: 1.6; max-width: 280px; }
+  .rotate-prompt__dismiss { margin-top: 8px; font-size: 0.8rem; color: rgba(255,255,255,0.35); cursor: pointer; background: none; border: none; font-family: inherit; text-decoration: underline; }
+  @media (max-width: 768px) and (orientation: portrait) { .rotate-prompt { display: flex; } }
   </style>
 </head>
 <body>
 
-  <!-- Background desk layer -->
   <div class="bg-layer" aria-hidden="true"></div>
 
-  <!-- Corpay logo -->
   <a class="corpay-logo" href="/">Corpay<span class="corpay-logo__caret">^</span></a>
+  <span class="scene-prompt">Select a briefing to open</span>
 
-  <!-- Rotate prompt (portrait mobile) -->
+  <!-- Rotate prompt -->
   <div class="rotate-prompt" id="rotatePrompt" role="dialog" aria-label="Please rotate your device">
     <svg class="rotate-prompt__icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="18" y="8" width="28" height="48" rx="4" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
@@ -1005,533 +216,66 @@ body {
       <circle cx="32" cy="54" r="2" fill="rgba(255,255,255,0.4)"/>
       <path d="M44 30 L56 30 M50 24 L56 30 L50 36" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    <p>For the best experience, please rotate your device to <strong style="color:#fff">landscape</strong> orientation to view both pages of the book.</p>
+    <p>For the best experience, please rotate your device to <strong style="color:#fff">landscape</strong> orientation.</p>
     <button class="rotate-prompt__dismiss" id="rotatePromptDismiss">Continue anyway</button>
   </div>
 
-  <!-- Book scene -->
-  <div class="book-scene">
-    <div class="book-wrapper" id="bookWrapper">
+  <!-- Desk scene -->
+  <div class="desk-scene">
 
-      <!-- CLOSED COVER -->
-      <div class="book-cover" id="bookCover" role="button" tabindex="0" aria-label="Open the IBM Corpay Annual Report review">
-        <div class="book-cover__face">
-          <div class="cover__ibm-bar"></div>
-          <span class="cover__eyebrow">Prepared for Corpay Executive Leadership</span>
-          <h1 class="cover__title">Corpay 2025<br>Form 10-K<br>Review</h1>
-          <p class="cover__subtitle">Five AI Opportunities<br>Identified by IBM</p>
-          <div class="cover__ibm-bar-bottom"></div>
-          <span class="cover__logo">IBM</span>
-          <span class="cover__click-hint">Click to open →</span>
-        </div>
+    <!-- LEATHER BOOK — AI on Z -->
+    <a class="book-item" href="/aionz" aria-label="Open IBM AI on Z briefing">
+      <div class="book-item__face">
+        <div class="book-item__bar"></div>
+        <span class="book-item__eyebrow">Prepared for Corpay</span>
+        <h2 class="book-item__title">Corpay 2025<br>Form 10-K<br>Review</h2>
+        <p class="book-item__subtitle">Five AI Opportunities<br>Identified by IBM</p>
+        <div style="width:32px;height:1px;background:rgba(15,98,254,0.5);margin-bottom:12px;"></div>
+        <span class="book-item__logo">IBM</span>
+        <span class="book-item__hint">Open →</span>
       </div>
+    </a>
 
-      <!-- OPEN BOOK (hidden until cover clicked) -->
-      <div class="book-open" id="bookOpen">
+    <!-- LEATHER PAMPHLET — Concert -->
+    <a class="pamphlet-item" href="/concert" aria-label="Open IBM Concert briefing">
+      <!-- Page stack visible behind cover -->
+      <div class="pamphlet-item__pages"></div>
 
-        <!-- Prev / Next arrows -->
-        <button class="book-nav book-nav--prev is-hidden" id="navPrev" aria-label="Previous spread">‹</button>
-        <button class="book-nav book-nav--next" id="navNext" aria-label="Next spread">›</button>
+      <!-- Cover -->
+      <div class="pamphlet-item__face">
+        <!-- Leather cord SVG — top left corner binding -->
+        <svg class="pamphlet-item__cord" width="54" height="54" viewBox="0 0 54 54" fill="none">
+          <!-- Cord loops -->
+          <path d="M4 4 Q14 2 16 16 Q18 28 8 30 Q2 32 4 4" stroke="#2a1505" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M4 4 Q2 14 16 16 Q28 18 30 8 Q32 2 4 4" stroke="#2a1505" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- Knot -->
+          <circle cx="16" cy="16" r="4.5" fill="#3d1f08" stroke="#1a0c02" stroke-width="1"/>
+          <circle cx="16" cy="16" r="2" fill="#5c3010"/>
+          <!-- Cord ends -->
+          <path d="M16 20 Q15 30 12 38" stroke="#2a1505" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M20 16 Q30 15 38 12" stroke="#2a1505" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
 
-        <div class="book" id="book">
+        <span class="pamphlet-item__eyebrow" style="margin-top: clamp(22px,3vw,36px);">IBM Concert</span>
+        <h2 class="pamphlet-item__title">IT Operations<br>Briefing</h2>
+        <p class="pamphlet-item__subtitle">Addressing Corpay's<br>Operational Risk</p>
+        <span class="pamphlet-item__logo">IBM</span>
+        <span class="pamphlet-item__hint">Open →</span>
+      </div>
+    </a>
 
-          <!-- ========================================================
-               SPREAD 0 — Intro / Table of Contents
-               ======================================================== -->
-          <div class="spread is-active" data-spread="0">
-
-            <!-- LEFT: We Read Your Annual Report -->
-            <div class="page page--left">
-              <p class="page-eyebrow">IBM · Corpay 2025 Form 10-K</p>
-              <h2 class="page-headline">We Read Your<br>Annual Report.</h2>
-              <p class="page-subhead">We found five opportunities where AI on IBM Z can help Corpay reduce risk, improve decisioning, and strengthen payment operations.</p>
-              <hr class="page-rule">
-              <p class="page-body">Rather than bringing generic AI use cases, IBM reviewed Corpay's 2025 Annual Report and mapped five business priorities to practical AI opportunities on IBM Z.</p>
-              <p class="page-body">Each opportunity in this review begins with Corpay's own disclosure, followed by IBM's perspective on where real-time, trusted AI can create value — right where your most critical decisions already happen.</p>
-              <p class="page-body" style="font-size:0.78rem;color:#9ca3af;margin-top:auto;padding-top:24px;">Source: Corpay 2025 Form 10-K.</p>
-              <span class="page-num">i</span>
-            </div>
-
-            <!-- RIGHT: Table of Contents -->
-            <div class="page page--right">
-              <p class="page-eyebrow">Contents</p>
-              <span class="toc-title">Table of Contents</span>
-              <ul class="toc-list">
-                <li>
-                  <span class="toc-num">—</span>
-                  <span class="toc-label">IBM–Corpay Partnership</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="1">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">01</span>
-                  <span class="toc-label">Real-Time Fraud Prevention</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="2">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">02</span>
-                  <span class="toc-label">Credit Risk &amp; Bad Debt Mitigation</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="3">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">03</span>
-                  <span class="toc-label">Cross-Border Compliance &amp; Sanctions</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="4">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">04</span>
-                  <span class="toc-label">AP Automation &amp; Spend Management</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="5">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">05</span>
-                  <span class="toc-label">Cybersecurity &amp; Data Movement Risk</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="6">Open →</a>
-                </li>
-                <li>
-                  <span class="toc-num">→</span>
-                  <span class="toc-label">IBM Recommended Next Steps</span>
-                  <span class="toc-dots"></span>
-                  <a class="toc-link" data-goto="7">Open →</a>
-                </li>
-              </ul>
-              <span class="page-num">ii</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 1 — IBM–Corpay Partnership
-               ======================================================== -->
-          <div class="spread" data-spread="1">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="page-eyebrow">IBM Horizon Select Program</p>
-              <div class="horizon-badge"><span class="horizon-badge__star">★</span> Horizon Select Client</div>
-              <h2 class="page-headline" style="font-size:1.5rem;">IBM–Corpay<br>Partnership</h2>
-              <hr class="page-rule">
-              <p class="page-body">In 2025, IBM launched <strong>Horizon Select</strong> — our premier, high-touch engagement model designed to provide a single, accountable point of contact for planning, execution, and optimization of IBM technology investments.</p>
-              <p class="page-body">Based on strong client feedback, IBM expanded the Horizon program in 2026 and is pleased to announce that <strong>Corpay has been selected as a Horizon client.</strong></p>
-              <span class="page-num">1</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="page-eyebrow">Your Dedicated IBM Team</p>
-              <p class="page-body" style="margin-bottom:20px;">As part of this model, Corpay will be supported by a dedicated team who serve as primary points of contact and coordinate seamlessly across IBM. To ensure sustained executive focus and disciplined execution, each leader supports no more than three clients.</p>
-
-              <div class="team-card">
-                <p class="team-card__role">Territory Account Leader</p>
-                <p class="team-card__name">Christian Toulet</p>
-                <p class="team-card__desc">Primary point of contact for strategic planning, commercial alignment, and IBM executive coordination.</p>
-              </div>
-
-              <div class="team-card">
-                <p class="team-card__role">Architect / Technical Account Leader</p>
-                <p class="team-card__name">Mike Murphy</p>
-                <p class="team-card__desc">Primary technical point of contact for solution architecture, AI on Z design, and proof-of-concept execution.</p>
-              </div>
-
-              <p class="page-body" style="margin-top:20px;font-size:0.8rem;color:#6b7280;">Together, Christian and Mike provide an integrated IBM team focused exclusively on your success — from initial discovery through production deployment.</p>
-              <span class="page-num">2</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 2 — Observation 1: Fraud
-               ======================================================== -->
-          <div class="spread" data-spread="2">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="obs-label">Observation 01 · Fraud</p>
-              <h2 class="obs-title">Real-Time Fraud Prevention</h2>
-              <blockquote class="obs-quote">"We may incur substantial losses due to fraudulent use of our payment solutions."</blockquote>
-              <span class="obs-quote-source">— Corpay 2025 Form 10-K, Page 18</span>
-
-              <div class="ibm-insight-card">
-                <span class="ibm-insight-card__label">IBM Insight</span>
-                <p>Transactional AI on IBM Z can analyze 100% of payment transactions instantly, while the transaction is still in flight — helping catch and block fraud before a payment is authorized.</p>
-              </div>
-
-              <p class="obs-section-head">Why this matters</p>
-              <p class="obs-section-body">Fraud is not just a back-office issue. In a payments business, every transaction represents a real-time decision point. If suspicious activity is identified only after authorization or settlement, Corpay may be left trying to recover funds after the damage has already occurred.</p>
-              <span class="page-num">3</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="obs-section-head">IBM AI on Z Opportunity</p>
-              <p class="obs-section-body">Transactional AI on IBM Z can analyze 100% of payment transactions instantly, while the transaction is still in flight. This allows Corpay to score transactions for suspicious behavior before approval, helping catch and block fraud before a payment is authorized rather than attempting to recover funds afterward.</p>
-
-              <p class="obs-section-head" style="margin-top:16px;">Why AI on Z is Different</p>
-              <p class="obs-section-body">Because the AI runs where core transaction processing already occurs, Corpay can avoid moving sensitive transaction data off-platform for analysis. That means lower latency, reduced data movement, and real-time decisioning at enterprise scale.</p>
-
-              <ul class="outcome-list" style="margin-top:14px;">
-                <li>Analyze every transaction, not just sampled activity</li>
-                <li>Detect suspicious patterns before payment approval</li>
-                <li>Reduce fraud losses and post-event recovery efforts</li>
-                <li>Preserve transaction speed and customer experience</li>
-                <li>Keep sensitive payment data on the platform</li>
-              </ul>
-              <span class="page-num">4</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 3 — Observation 2: Credit
-               ======================================================== -->
-          <div class="spread" data-spread="3">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="obs-label">Observation 02 · Credit</p>
-              <h2 class="obs-title">Credit Risk &amp; Bad Debt Mitigation</h2>
-              <blockquote class="obs-quote">"If we fail to adequately assess and monitor credit risks or fraud of or by our customers or third parties, we could experience an increase in credit loss."</blockquote>
-              <span class="obs-quote-source">— Corpay 2025 Form 10-K, Page 27</span>
-
-              <div class="ibm-insight-card">
-                <span class="ibm-insight-card__label">IBM Insight</span>
-                <p>AI embedded directly into the transactional pipeline can continuously monitor account behavior and identify deteriorating credit quality in near real time, triggering executable action when a customer crosses a risk threshold.</p>
-              </div>
-
-              <p class="obs-section-head">Why this matters</p>
-              <p class="obs-section-body">Credit exposure can change quickly. A customer that looked acceptable during onboarding may become higher risk based on behavior, transaction patterns, payment timing, or external events. Static or delayed credit reviews can leave the business exposed.</p>
-              <span class="page-num">5</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="obs-section-head">IBM AI on Z Opportunity</p>
-              <p class="obs-section-body">AI embedded directly into the transactional pipeline can continuously monitor account behavior and identify deteriorating credit quality in near real time. When a customer crosses a risk threshold, Corpay could trigger executable action immediately — such as flagging the account, adjusting limits, requiring review, or increasing monitoring.</p>
-
-              <p class="obs-section-head" style="margin-top:16px;">Why AI on Z is Different</p>
-              <p class="obs-section-body">AI on IBM Z allows credit risk signals to be evaluated as transactions occur, instead of waiting for downstream analysis. This creates an opportunity to move from periodic risk assessment to continuous risk monitoring.</p>
-
-              <ul class="outcome-list" style="margin-top:14px;">
-                <li>Monitor customer behavior continuously</li>
-                <li>Identify risk threshold breaches faster</li>
-                <li>Reduce exposure to credit losses</li>
-                <li>Support faster account-level intervention</li>
-                <li>Improve confidence in credit decisioning</li>
-              </ul>
-              <span class="page-num">6</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 4 — Observation 3: Compliance
-               ======================================================== -->
-          <div class="spread" data-spread="4">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="obs-label">Observation 03 · Compliance</p>
-              <h2 class="obs-title">Cross-Border Compliance &amp; Sanctions Screening</h2>
-              <blockquote class="obs-quote">"Failure to comply with the FCPA, AML regulations, economic and trade sanctions regulations and similar laws applicable to our international activities, could subject us to penalties and other adverse consequences."</blockquote>
-              <span class="obs-quote-source">— Corpay 2025 Form 10-K, Page 35</span>
-
-              <div class="ibm-insight-card">
-                <span class="ibm-insight-card__label">IBM Insight</span>
-                <p>Corpay can use AI on IBM Z to support instant payee verification and sanctions screening for cross-border transactions across more than 200 jurisdictions — keeping compliance decisions before the payment moves.</p>
-              </div>
-              <span class="page-num">7</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="obs-section-head">Why this matters</p>
-              <p class="obs-section-body">Corpay operates across a complex global payments environment. Cross-border transactions require rapid decisions across payee verification, AML monitoring, sanctions screening, jurisdictional rules, and regulatory expectations. Delays or gaps can create financial, operational, and reputational risk.</p>
-
-              <p class="obs-section-head" style="margin-top:14px;">IBM AI on Z Opportunity</p>
-              <p class="obs-section-body">Real-time compliance monitoring can help evaluate payments before they move, reducing the latency and data-transfer risks associated with sending sensitive payment information off-platform for AI analysis.</p>
-
-              <p class="obs-section-head" style="margin-top:14px;">Why AI on Z is Different</p>
-              <p class="obs-section-body">Compliance decisions are most valuable when they happen before the payment leaves the system. By keeping AI close to the transaction, Corpay can improve speed, security, and auditability.</p>
-
-              <ul class="outcome-list" style="margin-top:12px;">
-                <li>Screen cross-border payments in real time</li>
-                <li>Support AML, FCPA, and sanctions compliance workflows</li>
-                <li>Reduce latency from off-platform analysis</li>
-                <li>Minimize sensitive data movement</li>
-                <li>Help avoid regulatory penalties and adverse consequences</li>
-              </ul>
-              <span class="page-num">8</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 5 — Observation 4: AP
-               ======================================================== -->
-          <div class="spread" data-spread="5">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="obs-label">Observation 04 · Accounts Payable</p>
-              <h2 class="obs-title">AP Automation &amp; Spend Management</h2>
-              <blockquote class="obs-quote">"AI technologies are being rapidly adopted across the payment and enterprise software industries."</blockquote>
-              <span class="obs-quote-source">— Corpay 2025 Form 10-K, Page 46</span>
-
-              <div class="ibm-insight-card">
-                <span class="ibm-insight-card__label">IBM Insight</span>
-                <p>AI on IBM Z can apply real-time anomaly detection to AP and spend management workflows — flagging irregular invoices, out-of-policy spending, duplicate activity, and unusual vendors as transactions occur.</p>
-              </div>
-
-              <p class="obs-section-head">Why this matters</p>
-              <p class="obs-section-body">Corpay identifies AI adoption as a competitive force in the payments and enterprise software market. This creates both a risk and an opportunity. Competitors may use AI to improve automation, reduce manual effort, identify spend anomalies, and create better customer experiences.</p>
-              <span class="page-num">9</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="obs-section-head">IBM AI on Z Opportunity</p>
-              <p class="obs-section-body">AI on IBM Z can help Corpay apply real-time anomaly detection to accounts payable and spend management workflows. As invoices, payments, and employee spend events occur, AI can flag irregular invoices, out-of-policy spending, duplicate activity, unusual vendors, or abnormal transaction patterns.</p>
-
-              <p class="obs-section-head" style="margin-top:16px;">Why AI on Z is Different</p>
-              <p class="obs-section-body">Keeping AI close to the transaction allows Corpay to detect issues as they happen rather than after the fact. It also avoids unnecessary latency and security exposure from moving sensitive financial data to another platform for processing.</p>
-
-              <ul class="outcome-list" style="margin-top:14px;">
-                <li>Identify irregular invoices in real time</li>
-                <li>Flag out-of-policy spending earlier</li>
-                <li>Reduce manual review burden</li>
-                <li>Improve AP automation and spend governance</li>
-                <li>Strengthen Corpay's competitive AI position</li>
-              </ul>
-              <span class="page-num">10</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 6 — Observation 5: Cyber
-               ======================================================== -->
-          <div class="spread" data-spread="6">
-
-            <!-- LEFT -->
-            <div class="page page--left">
-              <p class="obs-label">Observation 05 · Cybersecurity</p>
-              <h2 class="obs-title">Cybersecurity &amp; Data Movement Risk</h2>
-              <blockquote class="obs-quote">"We may not be able to adequately protect our systems or the data we collect from continually evolving cybersecurity and data-protection risks, which could subject us to liability and damage our reputation."</blockquote>
-              <span class="obs-quote-source">— Corpay 2025 Form 10-K, Page 58</span>
-
-              <div class="ibm-insight-card">
-                <span class="ibm-insight-card__label">IBM Insight</span>
-                <p>AI on IBM Z allows Corpay to generate insights where the data already resides — bringing AI to the data instead of moving highly sensitive financial data off-platform, reducing exposure while enabling real-time intelligence.</p>
-              </div>
-              <span class="page-num">11</span>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="page page--right">
-              <p class="obs-section-head">Why this matters</p>
-              <p class="obs-section-body">AI can create value, but it can also create new risk if sensitive financial, customer, or transaction data must be copied, exported, or moved to external environments for analysis. Every data movement path can increase exposure, complexity, cost, and governance requirements.</p>
-
-              <p class="obs-section-head" style="margin-top:14px;">IBM AI on Z Opportunity</p>
-              <p class="obs-section-body">Instead of moving highly sensitive financial data off-platform for AI analysis, Corpay can bring AI to the data — reducing exposure while still enabling real-time intelligence.</p>
-
-              <p class="obs-section-head" style="margin-top:14px;">Why AI on Z is Different</p>
-              <p class="obs-section-body">The mainframe is already designed for secure, high-volume, mission-critical transaction processing. Running AI directly on IBM Z helps preserve that security posture while reducing data-transfer risk, latency, and operational complexity.</p>
-
-              <ul class="outcome-list" style="margin-top:12px;">
-                <li>Reduce unnecessary movement of sensitive financial data</li>
-                <li>Preserve security around core transaction systems</li>
-                <li>Lower data-transfer risk and cost</li>
-                <li>Improve governance and auditability</li>
-                <li>Enable AI without weakening the security model</li>
-              </ul>
-              <span class="page-num">12</span>
-            </div>
-          </div>
-
-          <!-- ========================================================
-               SPREAD 7 — Next Steps + Workshop Cover
-               ======================================================== -->
-          <div class="spread" data-spread="7">
-
-            <!-- LEFT: Next Steps -->
-            <div class="page page--left">
-              <p class="nextsteps-eyebrow">IBM Recommended Next Steps</p>
-              <hr class="nextsteps-rule">
-              <h2 class="nextsteps-title">From Disclosure<br>to Decisioning</h2>
-              <p class="nextsteps-body">All five opportunities share a common theme: the most valuable AI decision is the one made while the transaction is still in flight. IBM AI on Z helps bring intelligence directly to the systems where Corpay's most critical payment, risk, compliance, and security decisions already happen.</p>
-
-              <blockquote class="closing-quote">We've identified the potential; now let's quantify the impact.</blockquote>
-
-              <p class="page-body" style="margin-top:16px;">Discover how our tailored <strong>Business Value Discovery Workshop</strong> can help pinpoint the exact revenue growth, operating margin improvements, and risk reduction these AI use cases can deliver. Turn the page to learn how we can map your decisions and design a targeted AI pilot that proves real ROI.</p>
-              <span class="page-num">13</span>
-            </div>
-
-            <!-- RIGHT: Workshop cover — links to /workshop -->
-            <div class="page page--right" style="padding:0;background:transparent;">
-              <a class="workshop-cover-link" href="/workshop" aria-label="Open the AI on IBM Z Discovery Workshop overview">
-                <div class="workshop-cover-page">
-                  <div class="wcp__hover-hint"></div>
-                  <div>
-                    <div class="wcp__ibm-bar"></div>
-                    <p class="wcp__eyebrow">2026 · Free of Charge</p>
-                    <h2 class="wcp__title">AI on IBM Z &amp;<br>LinuxONE<br>Discovery Workshop</h2>
-                    <p class="wcp__subtitle">A focused, 1–2 day working session to identify high-impact AI opportunities within your high-throughput transaction flows — and design a proof of concept that delivers measurable business value.</p>
-                    <span class="wcp__cta">View Workshop Overview →</span>
-                  </div>
-                  <p class="wcp__footer">Contact: aionz@us.ibm.com · © 2026 IBM Corporation</p>
-                </div>
-              </a>
-            </div>
-          </div>
-
-        </div><!-- /book -->
-
-        <!-- Spread indicator dots -->
-        <div class="spread-indicator" id="spreadIndicator"></div>
-
-      </div><!-- /book-open -->
-
-    </div><!-- /book-wrapper -->
-  </div><!-- /book-scene -->
+  </div>
 
   <script>
   (function () {
-    'use strict';
-
-    var TOTAL_SPREADS = 8; // 0–7
-    var currentSpread = 0;
-    var isAnimating = false;
-
-    var bookCover   = document.getElementById('bookCover');
-    var bookOpen    = document.getElementById('bookOpen');
-    var navPrev     = document.getElementById('navPrev');
-    var navNext     = document.getElementById('navNext');
-    var indicator   = document.getElementById('spreadIndicator');
-    var spreads     = document.querySelectorAll('.spread');
-
-    // ── Build indicator dots ──────────────────────────────────────────
-    for (var i = 0; i < TOTAL_SPREADS; i++) {
-      var dot = document.createElement('button');
-      dot.className = 'spread-indicator__dot' + (i === 0 ? ' is-active' : '');
-      dot.setAttribute('aria-label', 'Go to spread ' + (i + 1));
-      dot.setAttribute('data-index', i);
-      indicator.appendChild(dot);
-    }
-
-    indicator.addEventListener('click', function (e) {
-      var btn = e.target.closest('.spread-indicator__dot');
-      if (!btn) return;
-      var idx = parseInt(btn.getAttribute('data-index'), 10);
-      goToSpread(idx);
-    });
-
-    // ── Open book ────────────────────────────────────────────────────
-    function openBook() {
-      bookCover.style.transition = 'transform 0.5s ease, opacity 0.4s ease';
-      bookCover.style.transform  = 'rotateY(-90deg) scale(0.8)';
-      bookCover.style.opacity    = '0';
-      setTimeout(function () {
-        bookCover.style.display = 'none';
-        bookOpen.classList.add('is-visible');
-      }, 450);
-    }
-
-    bookCover.addEventListener('click', openBook);
-    bookCover.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openBook(); }
-    });
-
-    // ── Navigate spreads ─────────────────────────────────────────────
-    function goToSpread(index, direction) {
-      if (isAnimating || index === currentSpread) return;
-      if (index < 0 || index >= TOTAL_SPREADS) return;
-
-      isAnimating = true;
-      var dir = direction || (index > currentSpread ? 'next' : 'prev');
-
-      var outgoing = spreads[currentSpread];
-      var incoming = spreads[index];
-
-      outgoing.classList.add('flip-' + dir);
-
-      setTimeout(function () {
-        outgoing.classList.remove('is-active', 'flip-next', 'flip-prev');
-        incoming.classList.add('is-active');
-        incoming.classList.add('flip-' + dir);
-
-        setTimeout(function () {
-          incoming.classList.remove('flip-next', 'flip-prev');
-          isAnimating = false;
-        }, 200);
-
-        currentSpread = index;
-        updateNav();
-      }, 200);
-    }
-
-    function updateNav() {
-      // Arrows
-      navPrev.classList.toggle('is-hidden', currentSpread === 0);
-      navNext.classList.toggle('is-hidden', currentSpread === TOTAL_SPREADS - 1);
-
-      // Dots
-      document.querySelectorAll('.spread-indicator__dot').forEach(function (dot, i) {
-        dot.classList.toggle('is-active', i === currentSpread);
-      });
-    }
-
-    navPrev.addEventListener('click', function () { goToSpread(currentSpread - 1, 'prev'); });
-    navNext.addEventListener('click', function () { goToSpread(currentSpread + 1, 'next'); });
-
-    // Keyboard left/right
-    document.addEventListener('keydown', function (e) {
-      if (!bookOpen.classList.contains('is-visible')) return;
-      if (e.key === 'ArrowRight') goToSpread(currentSpread + 1, 'next');
-      if (e.key === 'ArrowLeft')  goToSpread(currentSpread - 1, 'prev');
-    });
-
-    // ── TOC links ────────────────────────────────────────────────────
-    document.querySelectorAll('.toc-link[data-goto]').forEach(function (link) {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        var target = parseInt(this.getAttribute('data-goto'), 10);
-        if (!bookOpen.classList.contains('is-visible')) openBook();
-        setTimeout(function () { goToSpread(target); }, bookOpen.classList.contains('is-visible') ? 0 : 500);
-      });
-    });
-
-    // ── Rotate prompt ────────────────────────────────────────────────
-    var rotatePromptDismiss = document.getElementById('rotatePromptDismiss');
-    var rotatePrompt = document.getElementById('rotatePrompt');
-
-    if (rotatePromptDismiss) {
-      rotatePromptDismiss.addEventListener('click', function () {
-        rotatePrompt.style.display = 'none';
-      });
-    }
-
-    // Hide prompt when device rotates to landscape
+    var dismiss = document.getElementById('rotatePromptDismiss');
+    var prompt  = document.getElementById('rotatePrompt');
+    if (dismiss) dismiss.addEventListener('click', function () { prompt.style.display = 'none'; });
     window.addEventListener('orientationchange', function () {
       setTimeout(function () {
-        if (window.innerWidth > window.innerHeight) {
-          rotatePrompt.style.display = 'none';
-        }
+        if (window.innerWidth > window.innerHeight) prompt.style.display = 'none';
       }, 300);
     });
-
-    // ── Touch swipe ──────────────────────────────────────────────────
-    var touchStartX = 0;
-    document.addEventListener('touchstart', function (e) {
-      touchStartX = e.changedTouches[0].clientX;
-    }, { passive: true });
-
-    document.addEventListener('touchend', function (e) {
-      if (!bookOpen.classList.contains('is-visible')) return;
-      var dx = e.changedTouches[0].clientX - touchStartX;
-      if (Math.abs(dx) < 50) return;
-      if (dx < 0) goToSpread(currentSpread + 1, 'next');
-      else        goToSpread(currentSpread - 1, 'prev');
-    }, { passive: true });
-
   })();
   </script>
 
